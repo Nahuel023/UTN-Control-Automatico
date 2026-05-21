@@ -1,0 +1,271 @@
+%% styles/boxes.sty
+%% Definición de todas las cajas pedagógicas con tcolorbox
+%% Apunte "Control Automático" — UTN IEE
+\ProvidesPackage{boxes}[2024/01/01 Cajas tcolorbox UTN]
+
+%----------------------------------------------------------------------
+% CONTADORES POR CAPÍTULO
+%----------------------------------------------------------------------
+\newcounter{numejemplo}[chapter]
+\renewcommand{\thenumejemplo}{\thechapter.\arabic{numejemplo}}
+
+\newcounter{numejercicio}[chapter]
+\renewcommand{\thenumejercicio}{\thechapter.\arabic{numejercicio}}
+
+%----------------------------------------------------------------------
+% CAJA: DEFINICIÓN (azul)
+%----------------------------------------------------------------------
+\newtcolorbox{definicion}[2][]{
+  enhanced, breakable,
+  colback   = coldef!7!white,
+  colframe  = coldef,
+  coltitle  = white,
+  fonttitle = \bfseries\small,
+  title     = {Definición:\enspace #2},
+  attach boxed title to top left = {yshift=-2mm, xshift=4mm},
+  boxed title style = {
+    colback=coldef, colframe=coldef, sharp corners, left=3pt, right=3pt
+  },
+  sharp corners = south,
+  left=6pt, right=6pt, top=8pt, bottom=6pt,
+  before upper = {\setlength{\parskip}{4pt}},
+  #1
+}
+
+%----------------------------------------------------------------------
+% CAJA: TEOREMA / PROPIEDAD (verde)
+%----------------------------------------------------------------------
+\newtcolorbox{teorema}[2][]{
+  enhanced, breakable,
+  colback   = colthm!7!white,
+  colframe  = colthm,
+  coltitle  = white,
+  fonttitle = \bfseries\small,
+  title     = {Teorema:\enspace #2},
+  attach boxed title to top left = {yshift=-2mm, xshift=4mm},
+  boxed title style = {
+    colback=colthm, colframe=colthm, sharp corners, left=3pt, right=3pt
+  },
+  sharp corners = south,
+  left=6pt, right=6pt, top=8pt, bottom=6pt,
+  #1
+}
+
+\newtcolorbox{propiedad}[2][]{
+  enhanced, breakable,
+  colback   = colthm!5!white,
+  colframe  = colthm!75!black,
+  coltitle  = white,
+  fonttitle = \bfseries\small,
+  title     = {Propiedad:\enspace #2},
+  attach boxed title to top left = {yshift=-2mm, xshift=4mm},
+  boxed title style = {
+    colback=colthm!75!black, colframe=colthm!75!black,
+    sharp corners, left=3pt, right=3pt
+  },
+  sharp corners = south,
+  left=6pt, right=6pt, top=8pt, bottom=6pt,
+  #1
+}
+
+%----------------------------------------------------------------------
+% CAJA: EJEMPLO (naranja) — con contador automático
+%----------------------------------------------------------------------
+\newtcolorbox[use counter=numejemplo]{ejemplo}[2][]{
+  enhanced, breakable,
+  colback   = colex!6!white,
+  colframe  = colex,
+  coltitle  = white,
+  fonttitle = \bfseries\small,
+  title     = {Ejemplo~\thenumejemplo:\enspace #2},
+  attach boxed title to top left = {yshift=-2mm, xshift=4mm},
+  boxed title style = {
+    colback=colex, colframe=colex, sharp corners, left=3pt, right=3pt
+  },
+  sharp corners = south,
+  left=6pt, right=6pt, top=8pt, bottom=6pt,
+  before upper = {\setlength{\parskip}{4pt}},
+  #1
+}
+
+%----------------------------------------------------------------------
+% CAJA: EJERCICIO RESUELTO (naranja más oscuro) — con contador
+%----------------------------------------------------------------------
+\newtcolorbox[use counter=numejercicio]{ejercicioresuelto}[2][]{
+  enhanced, breakable,
+  colback   = colex!10!white,
+  colframe  = colex!80!black,
+  coltitle  = white,
+  fonttitle = \bfseries\small,
+  title     = {Ejercicio Resuelto~\thenumejercicio:\enspace #2},
+  attach boxed title to top left = {yshift=-2mm, xshift=4mm},
+  boxed title style = {
+    colback=colex!80!black, colframe=colex!80!black,
+    sharp corners, left=3pt, right=3pt
+  },
+  sharp corners = south,
+  left=6pt, right=6pt, top=8pt, bottom=6pt,
+  before upper = {\setlength{\parskip}{4pt}},
+  #1
+}
+
+%----------------------------------------------------------------------
+% CAJA: OBSERVACIÓN / NOTA (celeste)
+%----------------------------------------------------------------------
+\newtcolorbox{observacion}[1][Observación]{
+  enhanced, breakable,
+  colback   = colobs!8!white,
+  colframe  = colobs,
+  coltitle  = white,
+  fonttitle = \bfseries\small,
+  title     = {#1},
+  attach boxed title to top left = {yshift=-2mm, xshift=4mm},
+  boxed title style = {
+    colback=colobs, colframe=colobs, sharp corners, left=3pt, right=3pt
+  },
+  sharp corners = south,
+  left=6pt, right=6pt, top=8pt, bottom=6pt,
+}
+
+\newtcolorbox{nota}[1][Nota importante]{
+  enhanced, breakable,
+  colback   = colnota!6!white,
+  colframe  = colnota,
+  coltitle  = white,
+  fonttitle = \bfseries\small,
+  title     = {#1},
+  attach boxed title to top left = {yshift=-2mm, xshift=4mm},
+  boxed title style = {
+    colback=colnota, colframe=colnota, sharp corners, left=3pt, right=3pt
+  },
+  sharp corners = south,
+  left=6pt, right=6pt, top=8pt, bottom=6pt,
+}
+
+%----------------------------------------------------------------------
+% CAJA: ERROR COMÚN (rojo)
+%----------------------------------------------------------------------
+\newtcolorbox{errorcomon}[1][Error Común]{
+  enhanced, breakable,
+  colback   = colerr!6!white,
+  colframe  = colerr,
+  coltitle  = white,
+  fonttitle = \bfseries\small,
+  title     = {[!]\enspace #1},
+  attach boxed title to top left = {yshift=-2mm, xshift=4mm},
+  boxed title style = {
+    colback=colerr, colframe=colerr, sharp corners, left=3pt, right=3pt
+  },
+  sharp corners = south,
+  left=6pt, right=6pt, top=8pt, bottom=6pt,
+}
+
+%----------------------------------------------------------------------
+% CAJA: CONCEPTOS CLAVE (violeta) — para el resumen final
+%----------------------------------------------------------------------
+\newtcolorbox{conceptosclave}[1][Conceptos Clave del Capítulo]{
+  enhanced, breakable,
+  colback   = colkey!6!white,
+  colframe  = colkey,
+  coltitle  = white,
+  fonttitle = \bfseries,
+  title     = {#1},
+  attach boxed title to top left = {yshift=-2mm, xshift=4mm},
+  boxed title style = {
+    colback=colkey, colframe=colkey, sharp corners, left=5pt, right=5pt
+  },
+  sharp corners = south,
+  left=8pt, right=8pt, top=10pt, bottom=8pt,
+}
+
+%----------------------------------------------------------------------
+% CAJA: CÓDIGO MATLAB (oscura, con minted)
+%----------------------------------------------------------------------
+\newtcblisting{matlabcode}[1][]{
+  listing engine  = minted,
+  minted language = matlab,
+  minted options  = {
+    fontsize   = \small,
+    linenos    = true,
+    numbersep  = 6pt,
+    breaklines = true,
+    tabsize    = 4
+  },
+  listing only,
+  enhanced, breakable,
+  colback   = colmatlabbg,
+  colframe  = colmatlab!60!black,
+  coltitle  = white,
+  fonttitle = \bfseries\small,
+  title     = {Código MATLAB},
+  attach boxed title to top left = {yshift=-2mm, xshift=4mm},
+  boxed title style = {
+    colback=colmatlab, colframe=colmatlab, sharp corners, left=4pt, right=4pt
+  },
+  sharp corners = south,
+  left=8pt, right=6pt, top=8pt, bottom=6pt,
+  #1
+}
+
+%% Variante con título personalizado
+\newtcblisting{matlabcodetitulo}[2][]{
+  listing engine  = minted,
+  minted language = matlab,
+  minted options  = {
+    fontsize   = \small,
+    linenos    = true,
+    numbersep  = 6pt,
+    breaklines = true,
+    tabsize    = 4
+  },
+  listing only,
+  enhanced, breakable,
+  colback   = colmatlabbg,
+  colframe  = colmatlab!60!black,
+  coltitle  = white,
+  fonttitle = \bfseries\small,
+  title     = {Código MATLAB:\enspace #2},
+  attach boxed title to top left = {yshift=-2mm, xshift=4mm},
+  boxed title style = {
+    colback=colmatlab, colframe=colmatlab, sharp corners, left=4pt, right=4pt
+  },
+  sharp corners = south,
+  left=8pt, right=6pt, top=8pt, bottom=6pt,
+  #1
+}
+
+%----------------------------------------------------------------------
+% CAJA: RESULTADO / FÓRMULA DESTACADA
+%----------------------------------------------------------------------
+\newtcolorbox{resultado}[1][Resultado]{
+  enhanced,
+  colback   = utnlightblue,
+  colframe  = utnblue,
+  coltitle  = white,
+  fonttitle = \bfseries\small,
+  title     = {#1},
+  attach boxed title to top left = {yshift=-2mm, xshift=4mm},
+  boxed title style = {
+    colback=utnblue, colframe=utnblue, sharp corners, left=3pt, right=3pt
+  },
+  sharp corners = south,
+  left=6pt, right=6pt, top=8pt, bottom=6pt,
+}
+
+%----------------------------------------------------------------------
+% CAJA INFORMATIVA: APLICACIÓN EN INGENIERÍA ELÉCTRICA
+%----------------------------------------------------------------------
+\newtcolorbox{aplicacion}[1][Aplicación en Ingeniería Eléctrica]{
+  enhanced, breakable,
+  colback   = colthm!4!white,
+  colframe  = colthm!80!black,
+  coltitle  = white,
+  fonttitle = \bfseries\small,
+  title     = {#1},
+  attach boxed title to top left = {yshift=-2mm, xshift=4mm},
+  boxed title style = {
+    colback=colthm!80!black, sharp corners, left=3pt, right=3pt
+  },
+  sharp corners = south,
+  left=6pt, right=6pt, top=8pt, bottom=6pt,
+}

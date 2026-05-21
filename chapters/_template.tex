@@ -1,0 +1,225 @@
+%% chapters/_template.tex
+%% Plantilla para nuevos capítulos — Control Automático UTN IEE
+%%
+%% INSTRUCCIONES:
+%%   1. Copiá este archivo a chapters/chapterXX_nombre.tex
+%%   2. Reemplazá los marcadores [TEMA], [NÚMERO], etc.
+%%   3. Descomentá las secciones que uses; eliminá las que no apliquen.
+%%   4. Agregá \include{chapters/chapterXX_nombre} en main.tex
+
+\chapter{[TÍTULO DEL CAPÍTULO]}
+\label{ch:[etiqueta]}
+
+%% Epígrafe opcional
+\begin{flushright}
+  \itshape
+  ``[Cita relevante.]''\\[2pt]
+  \normalfont\small --- [Autor], \textit{[Obra]}
+\end{flushright}
+
+\bigskip
+
+%% Resumen introductorio del capítulo (3-5 líneas)
+En este capítulo se estudia [breve descripción]. Al finalizar, el estudiante
+será capaz de: (i)~[objetivo 1]; (ii)~[objetivo 2]; (iii)~[objetivo 3].
+
+%======================================================================
+\section{Introducción conceptual}
+\label{sec:[etiqueta]-intro}
+%======================================================================
+
+[Texto introductorio que contextualiza el tema. Conectar con lo visto en
+capítulos anteriores y motivar lo que viene.]
+
+%======================================================================
+\section{Motivación y aplicaciones reales}
+\label{sec:[etiqueta]-aplicaciones}
+%======================================================================
+
+[Por qué este tema importa en la práctica. Ejemplos de ingeniería eléctrica.]
+
+\begin{aplicacion}
+[Descripción de una aplicación concreta en motores, redes eléctricas,
+energías renovables, electrónica de potencia, etc.]
+\end{aplicacion}
+
+%======================================================================
+\section{Fundamentos teóricos}
+\label{sec:[etiqueta]-fundamentos}
+%======================================================================
+
+\begin{definicion}{[Nombre del concepto]}
+  [Definición formal del concepto principal.]
+\end{definicion}
+
+[Desarrollo del marco teórico. Incluir intuición física antes de la matemática.]
+
+\interfisica{[Qué significa físicamente este resultado.]}
+
+%======================================================================
+\section{Desarrollo matemático}
+\label{sec:[etiqueta]-matematica}
+%======================================================================
+
+[Derivaciones paso a paso. Explicar cada línea. Usar entornos align para
+ecuaciones de múltiples pasos.]
+
+\begin{align}
+  [ecuación 1] &= [resultado 1] \label{eq:[etiqueta]-1} \\
+  [ecuación 2] &= [resultado 2] \label{eq:[etiqueta]-2}
+\end{align}
+
+\begin{teorema}{[Nombre del teorema]}
+  [Enunciado formal. Hipótesis y tesis claramente indicadas.]
+\end{teorema}
+
+%======================================================================
+\section{Interpretación física}
+\label{sec:[etiqueta]-interpretacion}
+%======================================================================
+
+[Qué significa el resultado matemático en términos físicos. Usar analogías
+cuando ayuden a la comprensión.]
+
+\begin{observacion}
+  [Observación relevante que el estudiante no debe pasar por alto.]
+\end{observacion}
+
+%======================================================================
+\section{Ejemplos simples}
+\label{sec:[etiqueta]-ejemplos-simples}
+%======================================================================
+
+\begin{ejemplo}{[Título del ejemplo]}
+  \textbf{Enunciado.} [Descripción del problema.]
+
+  \textbf{Solución.}
+  \begin{enumerate}
+    \item [Paso 1]
+    \item [Paso 2]
+  \end{enumerate}
+
+  \textbf{Interpretación.} [Qué significa el resultado.]
+\end{ejemplo}
+
+%======================================================================
+\section{Ejemplos avanzados}
+\label{sec:[etiqueta]-ejemplos-avanzados}
+%======================================================================
+
+[Ejemplos más complejos que integran múltiples conceptos.]
+
+% [INSERTAR FIGURA: descripción detallada del gráfico, qué muestra,
+%  qué debe observar el alumno, por qué es pedagógicamente importante.]
+\figplaceholder{[Descripción detallada del gráfico requerido.]}
+
+%======================================================================
+\section{Ejercicios resueltos}
+\label{sec:[etiqueta]-ejercicios-resueltos}
+%======================================================================
+
+%% --- Ejercicio básico ---
+\begin{ejercicioresuelto}{[Título] (Nivel básico)}
+  \textbf{Enunciado.} [Descripción.]
+
+  \textbf{Análisis conceptual.} [Qué tipo de problema es y qué herramientas aplican.]
+
+  \textbf{Desarrollo matemático.}
+  \begin{align*}
+    [paso 1] &= [resultado] \\
+    [paso 2] &= [resultado]
+  \end{align*}
+
+  \textbf{Interpretación del resultado.} [Qué dice el resultado.]
+\end{ejercicioresuelto}
+
+%% --- Ejercicio intermedio ---
+\begin{ejercicioresuelto}{[Título] (Nivel intermedio)}
+  [...]
+\end{ejercicioresuelto}
+
+%% --- Ejercicio tipo examen ---
+\begin{ejercicioresuelto}{[Título] (Tipo examen)}
+  [...]
+\end{ejercicioresuelto}
+
+%======================================================================
+\section{Ejercicios propuestos}
+\label{sec:[etiqueta]-ejercicios-propuestos}
+%======================================================================
+
+\begin{enumerate}
+  \item [Enunciado ejercicio 1.]
+  \item [Enunciado ejercicio 2.]
+  \item [Enunciado ejercicio 3. \textit{Pista: [ayuda breve.]}]
+  \item [Enunciado ejercicio 4.]
+  \item [Enunciado ejercicio 5. Nivel avanzado.]
+\end{enumerate}
+
+%======================================================================
+\section{Implementación en MATLAB}
+\label{sec:[etiqueta]-matlab}
+%======================================================================
+
+[Introducción al código. Objetivo de la simulación.]
+
+\begin{matlabcodetitulo}{[Descripción de lo que hace el script]}
+% [Objetivo: qué se quiere demostrar]
+% [Conexión con la teoría: qué concepto ilustra]
+
+[código MATLAB]
+
+% [Qué se espera observar en los gráficos resultantes]
+\end{matlabcodetitulo}
+
+[Explicación del código. Qué hace cada bloque. Qué mostrarán los gráficos.]
+
+%======================================================================
+\section{Gráficos sugeridos}
+\label{sec:[etiqueta]-graficos}
+%======================================================================
+
+% [INSERTAR FIGURA: Gráfico 1 — descripción]
+\figplaceholder{[Gráfico 1: descripción detallada.]}
+
+% [INSERTAR FIGURA: Gráfico 2 — descripción]
+\figplaceholder{[Gráfico 2: descripción detallada.]}
+
+%======================================================================
+\section{Resumen del capítulo}
+\label{sec:[etiqueta]-resumen}
+%======================================================================
+
+En este capítulo se estudió [tema]. Los resultados más importantes son:
+
+\begin{itemize}
+  \item [Punto clave 1.]
+  \item [Punto clave 2.]
+  \item [Punto clave 3.]
+\end{itemize}
+
+%======================================================================
+\section{Conceptos clave}
+\label{sec:[etiqueta]-conceptos}
+%======================================================================
+
+\begin{conceptosclave}
+\begin{description}[leftmargin=4em, labelwidth=3.5em, font=\bfseries\color{colkey}]
+  \item[Término 1]   Definición breve y precisa.
+  \item[Término 2]   Definición breve y precisa.
+  \item[Término 3]   Definición breve y precisa.
+\end{description}
+\end{conceptosclave}
+
+%======================================================================
+\section{Errores comunes}
+\label{sec:[etiqueta]-errores}
+%======================================================================
+
+\begin{errorcomon}[Error 1]
+  [Descripción del error. Por qué ocurre y cómo evitarlo.]
+\end{errorcomon}
+
+\begin{errorcomon}[Error 2]
+  [Descripción del error. Por qué ocurre y cómo evitarlo.]
+\end{errorcomon}

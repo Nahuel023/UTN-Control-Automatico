@@ -1,0 +1,211 @@
+%% main.tex
+%% Apunte Universitario: "Control Automático" — UTN Ingeniería en Energía Eléctrica
+%% Compilar con: latexmk -pdf -shell-escape main.tex
+%% Codificación: UTF-8 | Fin de línea: LF
+
+\documentclass[12pt, a4paper, twoside, openany]{book}
+
+%----------------------------------------------------------------------
+% PAQUETES DE ESTILO (en styles/)
+%----------------------------------------------------------------------
+\usepackage{styles/preamble}
+\usepackage{styles/boxes}
+\usepackage{styles/commands}
+
+%----------------------------------------------------------------------
+% METADATOS DEL DOCUMENTO
+%----------------------------------------------------------------------
+\title{Control Automático\\[0.5em]\large Apunte Universitario}
+\author{Cátedra Control Automático\\UTN Ingeniería en Energía Eléctrica}
+\date{\the\year}
+
+%======================================================================
+\begin{document}
+%======================================================================
+
+%----------------------------------------------------------------------
+% PORTADA
+%----------------------------------------------------------------------
+\begin{titlepage}
+\thispagestyle{empty}
+
+%% Banner superior con TikZ
+\begin{tikzpicture}[remember picture, overlay]
+  \fill[utnblue]
+    (current page.north west) rectangle
+    ([yshift=-7.5cm] current page.north east);
+  \fill[utnmidblue]
+    ([yshift=-7.5cm] current page.north west) rectangle
+    ([yshift=-8.2cm] current page.north east);
+  \fill[utnblue!25!white]
+    (current page.south west) rectangle
+    ([yshift=2.5cm] current page.south east);
+\end{tikzpicture}
+
+\vspace*{0.6cm}
+\begin{center}
+  %% Institución (sobre el banner azul)
+  {\color{white}\Large\bfseries UNIVERSIDAD TECNOLÓGICA NACIONAL}\\[0.4em]
+  {\color{utnlightblue}\large Ingeniería en Energía Eléctrica}\\[0.3em]
+  {\color{utnlightblue}\normalsize Asignatura N.º~33 \textbullet\ Bloque: Tecnologías Aplicadas
+    \textbullet\ 120 h cuatrimestrales}
+
+  \vspace{3.8cm}
+
+  %% Título principal
+  {\color{utnblue}\rule{0.82\textwidth}{2.5pt}}\\[0.7em]
+  {\color{utnblue}\fontsize{38}{46}\selectfont\bfseries Control\\[0.2em]Automático}\\[0.6em]
+  {\color{utngray}\LARGE Apunte de Cátedra}\\[0.5em]
+  {\color{utnblue}\rule{0.82\textwidth}{2.5pt}}
+
+  \vspace{2.0cm}
+
+  %% Información del curso
+  \begin{tabular}{@{}r@{\enspace}l@{}}
+    \textcolor{utngray}{\textbf{Carrera:}}      & Ingeniería en Energía Eléctrica \\[4pt]
+    \textcolor{utngray}{\textbf{Año:}}           & 4.º año \\[4pt]
+    \textcolor{utngray}{\textbf{Carga horaria:}} & 120 horas \,\textbullet\, 5 h/semana \\[4pt]
+    \textcolor{utngray}{\textbf{Área:}}          & Aplicaciones de la Ingeniería \\[4pt]
+    \textcolor{utngray}{\textbf{Nivel:}}         & 4 — Analizar/Diseñar \\
+  \end{tabular}
+
+  \vfill
+
+  %% Pie de portada
+  {\color{utnblue}\rule{0.5\textwidth}{1pt}}\\[0.5em]
+  {\color{utngray}\large Cátedra Control Automático}\\[0.3em]
+  {\color{utngray}UTN --- Facultad Regional}\\[0.3em]
+  {\color{utngray}\the\year}
+\end{center}
+\end{titlepage}
+
+%----------------------------------------------------------------------
+% PÁGINA DE CRÉDITOS
+%----------------------------------------------------------------------
+\thispagestyle{empty}
+\vspace*{\fill}
+\noindent\textbf{Control Automático — Apunte de Cátedra}\\
+Universidad Tecnológica Nacional\\
+Ingeniería en Energía Eléctrica
+
+\medskip
+\noindent Este apunte ha sido elaborado como material de estudio para la
+asignatura Control Automático. El contenido está basado principalmente en
+\cite{ogata2010} y \cite{bolton2006}, con desarrollos pedagógicos propios
+orientados a los estudiantes de Ingeniería en Energía Eléctrica.
+
+\medskip
+\noindent\textbf{Bibliografía principal:}\\
+Ogata, K. (2010). \textit{Ingeniería de Control Moderna} (5.ª ed.). Pearson.\\
+Bolton, W. (2006). \textit{Ingeniería de Control} (2.ª ed.). Alfaomega.
+
+\medskip
+\noindent\textit{El material de este apunte no reemplaza la bibliografía obligatoria
+de la materia. Se recomienda su uso en conjunto con las fuentes originales.}
+
+\vspace*{\fill}
+\newpage
+
+%----------------------------------------------------------------------
+% PREFACIO
+%----------------------------------------------------------------------
+\chapter*{Prefacio}
+\addcontentsline{toc}{chapter}{Prefacio}
+\markboth{Prefacio}{Prefacio}
+
+El control automático es una disciplina fundamental en la ingeniería moderna.
+Desde los reguladores de velocidad de las primeras máquinas de vapor hasta los
+sofisticados sistemas de control de generación distribuida y energías renovables,
+la capacidad de hacer que un sistema se comporte de manera deseada —de forma
+automática y robusta— es una herramienta indispensable para el ingeniero
+en energía eléctrica.
+
+Este apunte fue concebido para acompañar el cursado de la asignatura
+\textbf{Control Automático} de la carrera Ingeniería en Energía Eléctrica
+de la Universidad Tecnológica Nacional. Está dirigido a estudiantes que
+se aproximan por primera vez a la disciplina, con formación previa en
+matemáticas (ecuaciones diferenciales, números complejos), física y
+circuitos eléctricos.
+
+\medskip
+\textbf{Filosofía pedagógica.} Cada tema se aborda primero desde la
+intuición física, luego se desarrolla formalmente, y finalmente se
+conecta con herramientas computacionales modernas (MATLAB/Simulink).
+Se hace hincapié en comprender el \textit{por qué} detrás de cada resultado,
+no solo el \textit{cómo}.
+
+\medskip
+\textbf{Estructura del apunte.} El texto está organizado en 17 capítulos
+que siguen el programa oficial de la materia:
+
+\begin{itemize}
+  \item \textbf{Capítulos 1--3:} Conceptos fundamentales, modelado matemático
+        y representación de sistemas.
+  \item \textbf{Capítulos 4--8:} Análisis de la respuesta temporal, estabilidad
+        y criterios de diseño.
+  \item \textbf{Capítulos 9--12:} Dominio frecuencial, diagramas de Bode y
+        técnicas de compensación.
+  \item \textbf{Capítulos 13:} Controladores PID.
+  \item \textbf{Capítulos 14--15:} Variables de estado, controlabilidad y
+        observabilidad.
+  \item \textbf{Capítulos 16--17:} Simulink y aplicaciones reales en
+        Ingeniería Eléctrica.
+\end{itemize}
+
+\medskip
+Cada capítulo incluye ejemplos resueltos con distintos niveles de dificultad,
+ejercicios propuestos, implementación en MATLAB y una sección de errores
+comunes que suelen cometerse en los exámenes.
+
+\medskip
+Se recomienda que el lector tenga acceso a MATLAB con el
+\textit{Control System Toolbox} para seguir las secciones de simulación.
+Todo el código presentado es reproducible y está disponible en la carpeta
+\texttt{matlab/} del repositorio del proyecto.
+
+\begin{flushright}
+  \textit{La Cátedra}
+\end{flushright}
+
+%----------------------------------------------------------------------
+% TABLA DE CONTENIDOS
+%----------------------------------------------------------------------
+\tableofcontents
+\listoffigures
+\addcontentsline{toc}{chapter}{Índice de figuras}
+
+%----------------------------------------------------------------------
+% CUERPO PRINCIPAL
+%----------------------------------------------------------------------
+\mainmatter
+
+\include{chapters/chapter01_introduction}
+% \include{chapters/chapter02_transfer_functions}   % próxima sesión
+% \include{chapters/chapter03_block_diagrams}
+% \include{chapters/chapter04_temporal_response}
+% \include{chapters/chapter05_steady_state_error}
+% \include{chapters/chapter06_stability}
+% \include{chapters/chapter07_routh_hurwitz}
+% \include{chapters/chapter08_root_locus}
+% \include{chapters/chapter09_frequency_response}
+% \include{chapters/chapter10_bode}
+% \include{chapters/chapter11_stability_freq}
+% \include{chapters/chapter12_compensators}
+% \include{chapters/chapter13_pid}
+% \include{chapters/chapter14_state_variables}
+% \include{chapters/chapter15_controllability_observability}
+% \include{chapters/chapter16_simulink}
+% \include{chapters/chapter17_applications}
+
+%----------------------------------------------------------------------
+% MATERIAL POSTERIOR
+%----------------------------------------------------------------------
+\backmatter
+
+\chapter*{Bibliografía}
+\addcontentsline{toc}{chapter}{Bibliografía}
+\printbibliography[heading=none]
+
+%======================================================================
+\end{document}
+%======================================================================

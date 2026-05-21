@@ -1,0 +1,1488 @@
+%% chapters/chapter01_introduction.tex
+%% Capítulo 1: Introducción a los Sistemas de Control
+%% Apunte "Control Automático" — UTN IEE
+%% Codificación: UTF-8
+
+\chapter{Introducción a los Sistemas de Control}
+\label{ch:introduccion}
+
+\begin{flushright}
+  \itshape
+  ``El propósito del control automático es hacer que el comportamiento\\
+  de un sistema se ajuste a un objetivo deseado, sin intervención humana\\
+  continua, incluso frente a perturbaciones imprevistas.''\\[2pt]
+  \normalfont\small --- Katsuhiko Ogata, \textit{Ingeniería de Control Moderna}
+\end{flushright}
+
+\bigskip
+
+El control automático está en todas partes: en el termostato que regula la
+temperatura de tu hogar, en el regulador de velocidad del automóvil, en
+los convertidores de frecuencia que controlan motores industriales, en los
+sistemas que estabilizan la tensión de la red eléctrica.
+En este capítulo se introducen los conceptos fundamentales que servirán
+de base para todo el curso. Al finalizar, el estudiante será capaz de:
+\begin{enumerate}
+  \item Identificar los componentes de un sistema de control en cualquier
+        aplicación práctica.
+  \item Distinguir entre control de lazo abierto y lazo cerrado, y comprender
+        las ventajas de la realimentación.
+  \item Describir cualitativamente las especificaciones de desempeño de un
+        sistema de control.
+  \item Implementar simulaciones básicas en MATLAB para analizar la respuesta
+        de sistemas simples.
+\end{enumerate}
+
+%======================================================================
+\section{¿Qué es el control automático?}
+\label{sec:intro-definicion}
+%======================================================================
+
+Imaginá que tenés que mantener la velocidad de un motor eléctrico exactamente
+en 1500 RPM mientras la carga mecánica que impulsa varía de manera impredecible.
+Si no hacés nada, el motor se frenará o se acelerará con cada cambio de carga.
+Podrías encargarte de ajustar manualmente la tensión de alimentación en cada
+instante, pero eso es humanamente imposible con la rapidez y precisión que requiere
+la aplicación. La solución es un \textbf{sistema de control automático}: un
+mecanismo que, sin intervención humana permanente, regula la velocidad del motor
+para mantenerla en el valor deseado pese a las perturbaciones.
+
+\begin{definicion}{Sistema de control automático}
+  Un \textbf{sistema de control automático} es un conjunto de componentes físicos
+  y/o lógicos que, mediante la observación de la salida de un proceso y la
+  comparación con un valor deseado, genera acciones correctivas para lograr que
+  dicha salida siga el valor deseado con la precisión, velocidad y estabilidad
+  especificadas, reduciendo o eliminando el efecto de perturbaciones externas.
+\end{definicion}
+
+La palabra clave en esa definición es \textit{observación}: el sistema de control
+\textbf{mide} lo que está sucediendo, lo \textbf{compara} con lo que debería suceder
+y \textbf{actúa} en consecuencia. Este ciclo ---medir, comparar, actuar--- es la
+esencia del control automático y se denomina \textbf{realimentación} o
+\textbf{retroalimentación} (del inglés \textit{feedback}).
+
+\subsection{¿Por qué ``automático''?}
+
+El adjetivo \textit{automático} distingue estos sistemas de los que requieren
+ajuste humano constante. En un control manual, un operario observa un medidor,
+juzga si la variable está fuera del rango deseado y opera algún actuador para
+corregirla. Este esquema:
+\begin{itemize}
+  \item Depende de la atención y el tiempo de reacción humanos.
+  \item No puede seguir perturbaciones más rápidas que unos pocos segundos.
+  \item No puede controlar simultáneamente decenas de variables en un proceso
+        industrial complejo.
+\end{itemize}
+Un sistema de control automático elimina estas limitaciones. Puede reaccionar
+en microsegundos, operar sin fatiga las 24 horas del día y controlar
+simultáneamente miles de variables en una planta industrial.
+
+\subsection{Diferencia entre regulación y seguimiento}
+
+Existen dos objetivos distintos que puede tener un sistema de control:
+
+\begin{description}
+  \item[Regulación (control de regulación):] mantener la variable controlada
+    constante frente a perturbaciones. Ejemplo: mantener la tensión de un
+    generador en 380 V pese a variaciones de carga.
+  \item[Seguimiento (control servo):] hacer que la variable controlada
+    siga una referencia que cambia con el tiempo. Ejemplo: un brazo robótico
+    que sigue una trayectoria predefinida.
+\end{description}
+
+Los mismos principios y herramientas matemáticas se aplican a ambos casos,
+aunque el énfasis en el diseño puede variar.
+
+%======================================================================
+\section{Perspectiva histórica}
+\label{sec:intro-historia}
+%======================================================================
+
+Comprender cómo evolucionó el control automático ayuda a apreciar por qué
+se desarrollaron ciertas herramientas matemáticas y cuál es su relevancia práctica.
+
+\textbf{Siglo XVIII — El regulador centrífugo de Watt (1788).}
+James Watt incorporó un regulador centrífugo a su máquina de vapor para
+mantener la velocidad constante. Dos bolas giratorias suben o bajan por
+efecto centrífugo a medida que la velocidad varía, y ese movimiento acciona
+una válvula de vapor. Es el primer sistema de control realimentado de uso
+industrial masivo.
+
+\textbf{Siglo XIX — Análisis matemático.}
+El matemático James Clerk Maxwell analizó en 1868 la estabilidad del regulador
+de Watt, publicando el primer tratamiento matemático de la estabilidad de
+sistemas de control. Eduard Routh (1877) generalizó este análisis con el
+criterio algebraico que lleva su nombre \verCap{7}.
+
+\textbf{Siglo XX temprano — Control PID y automatización industrial.}
+Nicolas Minorsky formuló en 1922 el controlador proporcional-integral-derivativo
+(PID) en el contexto del control de dirección de barcos. El PID sigue siendo,
+hasta hoy, el controlador más usado en la industria.
+
+\textbf{1930s--1940s — Métodos de dominio frecuencial.}
+Harry Nyquist (1932) desarrolló su criterio de estabilidad basado en la
+respuesta en frecuencia. Hendrik Bode (1940) sistematizó el análisis de
+frecuencia con sus diagramas logarítmicos, imprescindibles para el diseño
+de compensadores \verCap{10}.
+
+\textbf{1960s — Control moderno y espacio de estados.}
+Rudolf Kálmán introdujo el enfoque de variables de estado y el filtro de
+Kálmán, abriendo la era del control moderno. Estos métodos permiten analizar
+sistemas de múltiples entradas y múltiples salidas (MIMO) \verCap{14}.
+
+\textbf{1980s-presente — Control digital y computacional.}
+El control se implementa hoy casi exclusivamente en procesadores digitales
+(DSPs, PLCs, microcontroladores). MATLAB/Simulink se convirtió en la
+herramienta estándar para análisis, diseño y simulación.
+
+\begin{observacion}[Relevancia para Ingeniería Eléctrica]
+  La mayoría de los hitos históricos del control automático surgieron de
+  problemas de ingeniería eléctrica y mecánica: motores, máquinas de vapor,
+  comunicaciones. Hoy, los sistemas eléctricos de potencia, la electrónica de
+  potencia y las energías renovables son los principales impulsores de nuevas
+  técnicas de control.
+\end{observacion}
+
+%======================================================================
+\section{El sistema de control en la ingeniería eléctrica}
+\label{sec:intro-aplicaciones-ee}
+%======================================================================
+
+La ingeniería en energía eléctrica es uno de los campos donde el control
+automático tiene mayor impacto. A continuación se presentan las áreas de
+aplicación más relevantes, que se retomarán como ejemplos a lo largo del curso.
+
+\subsection{Control de accionamientos eléctricos}
+
+Un \textbf{accionamiento eléctrico} (o \textit{drive}) es el conjunto formado
+por un motor eléctrico y el convertidor electrónico que lo alimenta.
+El control automático es fundamental en:
+
+\begin{itemize}
+  \item \textbf{Control de velocidad:} un variador de frecuencia (inversor)
+    regula la velocidad de un motor de inducción ajustando la frecuencia
+    y tensión de alimentación. Sin control realimentado, la velocidad variaría
+    con la carga.
+  \item \textbf{Control de par:} en tracción eléctrica (trenes, autos eléctricos),
+    el control de par permite aceleraciones suaves y respuesta rápida.
+  \item \textbf{Control de posición (servo):} en brazos robóticos y máquinas
+    CNC, el motor debe posicionarse con precisión de micrómetros.
+\end{itemize}
+
+\begin{aplicacion}[Variador de frecuencia en bomba industrial]
+  Una bomba centrífuga alimenta agua a un edificio. Sin control, la bomba
+  funciona a velocidad constante y la presión se regula con una válvula de
+  estrangulamiento (ineficiente). Con un variador de frecuencia controlado
+  por un sensor de presión diferencial, la velocidad de la bomba se ajusta
+  continuamente para mantener la presión de consigna. El ahorro energético
+  típico es del 30--50\%.
+\end{aplicacion}
+
+\subsection{Control en sistemas de potencia}
+
+Los sistemas eléctricos de potencia ---generación, transmisión y distribución---
+dependen de múltiples lazos de control para su operación estable:
+
+\begin{itemize}
+  \item \textbf{Regulador automático de tensión (AVR):} controla la corriente
+    de excitación de un generador sincrónico para mantener la tensión terminal
+    constante.
+  \item \textbf{Regulador de velocidad (gobernador):} controla la apertura de
+    las válvulas de entrada de vapor (turbina) o agua (hidráulica) para mantener
+    la frecuencia de la red en \SI{50}{\hertz}.
+  \item \textbf{Estabilizadores de sistema de potencia (PSS):} añaden
+    amortiguamiento a las oscilaciones electromecánicas de la red.
+  \item \textbf{Control de reactivos (FACTS):} dispositivos de electrónica de
+    potencia que controlan el flujo de potencia reactiva para mejorar la
+    estabilidad de tensión.
+\end{itemize}
+
+\subsection{Electrónica de potencia}
+
+Los convertidores estáticos (rectificadores, inversores, choppers) requieren
+lazos de control muy rápidos (tiempos de respuesta de microsegundos) para:
+
+\begin{itemize}
+  \item Mantener la tensión de salida constante frente a variaciones de carga.
+  \item Regular la corriente para proteger los semiconductores.
+  \item Inyectar corriente senoidal a la red (inversores fotovoltaicos).
+  \item Controlar el flujo de potencia en enlace de corriente continua de alta
+    tensión (HVDC).
+\end{itemize}
+
+\subsection{Energías renovables}
+
+Los sistemas de energía renovable presentan desafíos particulares de control:
+
+\begin{itemize}
+  \item \textbf{Turbinas eólicas:} control del ángulo de pala (\textit{pitch})
+    para extraer la máxima potencia del viento (seguimiento del punto de máxima
+    potencia, MPPT) y limitar la potencia ante vientos fuertes.
+  \item \textbf{Sistemas fotovoltaicos:} control MPPT mediante algoritmos
+    de perturbación y observación que ajustan el punto de operación.
+  \item \textbf{Almacenamiento en baterías:} control de carga/descarga para
+    optimizar la vida útil y gestionar la inyección a la red.
+\end{itemize}
+
+\begin{nota}[Transversalidad del control automático]
+  Todas las aplicaciones mencionadas comparten los mismos conceptos
+  matemáticos: función de transferencia, estabilidad, respuesta en frecuencia,
+  diseño de controladores. Las herramientas que se desarrollan en este curso
+  son directamente aplicables a cada uno de estos campos.
+\end{nota}
+
+%======================================================================
+\section{Componentes fundamentales de un sistema de control}
+\label{sec:intro-componentes}
+%======================================================================
+
+Para analizar y diseñar sistemas de control, es indispensable identificar
+correctamente sus componentes. Todo sistema de control (con realimentación)
+contiene los siguientes elementos:
+
+\subsection{Planta o proceso}
+
+La \textbf{planta} (también llamada \textbf{proceso} en el contexto industrial)
+es el objeto físico cuya variable de salida se quiere controlar. Es lo que
+el sistema debe gobernar.
+
+\textit{Ejemplos:} un motor eléctrico (salida: velocidad de rotación), un horno
+(salida: temperatura), un tanque (salida: nivel de líquido), un generador
+(salida: tensión terminal).
+
+La planta tiene una dinámica propia ---descrita por ecuaciones diferenciales
+o, en el dominio de Laplace, por una función de transferencia--- que determina
+cómo responde a las señales de entrada.
+
+\subsection{Actuador}
+
+El \textbf{actuador} es el dispositivo que ejecuta la acción de control sobre
+la planta. Convierte la señal de control (generalmente eléctrica, de baja
+potencia) en una señal física de alta potencia capaz de modificar el
+comportamiento de la planta.
+
+\textit{Ejemplos:}
+\begin{itemize}
+  \item Variador de frecuencia (accionamiento eléctrico).
+  \item Válvula motorizada (sistemas de fluidos o vapor).
+  \item Transistor IGBT o MOSFET en un convertidor (electrónica de potencia).
+  \item Servo motor con engranaje (robótica).
+\end{itemize}
+
+\subsection{Sensor o transductor}
+
+El \textbf{sensor} mide la variable de salida de la planta y la convierte en
+una señal eléctrica que puede compararse con la referencia.
+
+\textit{Ejemplos:}
+\begin{itemize}
+  \item Tacómetro o encoder incremental (velocidad angular).
+  \item Termopar o RTD (temperatura).
+  \item Transformador de medida de tensión (tensión eléctrica).
+  \item Transformador de corriente (corriente eléctrica).
+  \item Resolver o encoder absoluto (posición angular).
+\end{itemize}
+
+La precisión del sensor determina un límite superior a la precisión del
+sistema de control: \textit{no se puede controlar mejor que lo que se puede medir}.
+
+\subsection{Controlador}
+
+El \textbf{controlador} es el ``cerebro'' del sistema. Recibe la señal de error
+(diferencia entre la referencia y la medición), la procesa matemáticamente y
+genera la señal de control que actúa sobre el actuador.
+
+Hoy en día, la mayor parte de los controladores son digitales: PLCs, DSPs,
+microcontroladores o computadoras industriales que ejecutan algoritmos de
+control en tiempo real.
+
+Los tipos de controladores que se estudian en este curso incluyen:
+controladores proporcionales (P), proporcionales-integrales (PI),
+proporcionales-derivativos (PD), PID, compensadores en adelanto y en
+atraso, y reguladores de estado.
+
+\subsection{Comparador o elemento de suma}
+
+El \textbf{comparador} (también llamado \textbf{sumador} o \textbf{nodo de
+error}) calcula la diferencia entre la señal de referencia $r(t)$ y la señal
+medida de salida $b(t)$:
+\begin{equation}
+  e(t) = r(t) - b(t)
+  \label{eq:error}
+\end{equation}
+Esta diferencia $e(t)$ se llama \textbf{señal de error}. Es la entrada al
+controlador. Si $e(t) = 0$, la salida coincide exactamente con la referencia
+y el controlador no necesita generar ninguna corrección.
+
+\subsection{Señales del sistema}
+
+\begin{definicion}{Nomenclatura de señales}
+  \begin{description}[leftmargin=3.5em, labelwidth=3em]
+    \item[$r(t)$] \textbf{Señal de referencia} (o \textit{setpoint}, \textit{consigna}).
+      Valor deseado de la variable controlada.
+    \item[$e(t)$] \textbf{Señal de error}. $e(t) = r(t) - b(t)$.
+    \item[$u(t)$] \textbf{Señal de control} (acción de control). Salida del
+      controlador, entrada al actuador/planta.
+    \item[$y(t)$] \textbf{Salida del sistema} (o variable controlada).
+    \item[$b(t)$] \textbf{Señal de realimentación}. Medición de la salida
+      proporcionada por el sensor: $b(t) = H \cdot y(t)$ donde $H$ es la
+      ganancia del sensor.
+    \item[$d(t)$] \textbf{Perturbación} (o disturbio, \textit{disturbance}).
+      Señal no deseada que afecta la salida. Puede actuar sobre la planta
+      o sobre el actuador.
+    \item[$n(t)$] \textbf{Ruido de medición}. Señal que contamina la
+      medición del sensor.
+  \end{description}
+\end{definicion}
+
+La \cref{fig:componentes-sistema} muestra el diagrama de bloques con todos
+estos componentes y señales.
+
+% [INSERTAR FIGURA: Diagrama de bloques completo de un sistema de control
+%  con realimentación negativa. Mostrar todos los componentes: referencia r(t),
+%  sumador, controlador Gc(s), actuador Ga(s), planta Gp(s), sensor H(s).
+%  Mostrar las señales e(t), u(t), y(t), b(t), perturbación d(t) y ruido n(t).
+%  El alumno debe observar el flujo de señales y el lazo de realimentación.
+%  Usar colores para distinguir: lazo directo (azul), lazo de realimentación (rojo).]
+\begin{figure}[htbp]
+  \centering
+  \figplaceholder{Diagrama de bloques completo de un sistema de control realimentado.
+  Componentes: referencia, sumador, controlador, actuador, planta, sensor.
+  Señales: $r(t)$, $e(t)$, $u(t)$, $y(t)$, $b(t)$, $d(t)$, $n(t)$.}
+  \caption{Diagrama de bloques completo de un sistema de control realimentado.}
+  \label{fig:componentes-sistema}
+\end{figure}
+
+%======================================================================
+\section{Sistema de control de lazo abierto}
+\label{sec:intro-lazo-abierto}
+%======================================================================
+
+\begin{definicion}{Sistema de lazo abierto}
+  Un \textbf{sistema de control de lazo abierto} es aquel en el que la acción
+  de control es independiente de la salida del proceso. No existe medición
+  de la salida ni comparación con la referencia: la señal de control se genera
+  únicamente a partir de la referencia de entrada.
+\end{definicion}
+
+\subsection{Estructura de un sistema de lazo abierto}
+
+En un sistema de lazo abierto, la estructura es simplemente:
+\begin{equation}
+  r(t) \;\longrightarrow\; \boxed{\text{Controlador}} \;\longrightarrow\;
+  u(t) \;\longrightarrow\; \boxed{\text{Planta}} \;\longrightarrow\; y(t)
+\end{equation}
+
+La salida $y(t)$ no ``vuelve'' al controlador. El controlador actúa según un
+programa prefijado, sin saber qué está pasando realmente con la planta.
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[auto, node distance=2.8cm, thick]
+    \node[input]  (ref)  {};
+    \node[block,  right of=ref, node distance=2.5cm] (ctrl) {Controlador\\$G_c(s)$};
+    \node[block,  right of=ctrl, node distance=3.8cm] (planta) {Planta\\$G_p(s)$};
+    \node[output, right of=planta, node distance=2.5cm] (out) {};
+
+    \draw[->] (ref)   -- node[above] {$R(s)$} (ctrl);
+    \draw[->] (ctrl)  -- node[above] {$U(s)$} (planta);
+    \draw[->] (planta)-- node[above] {$Y(s)$} (out);
+  \end{tikzpicture}
+  \caption{Diagrama de bloques de un sistema de control de \textbf{lazo abierto}.
+           No hay medición de la salida ni realimentación.}
+  \label{fig:lazo-abierto}
+\end{figure}
+
+\subsection{Ejemplo: temporizador de microondas}
+
+Un horno microondas controlado por temporizador es un ejemplo clásico de
+lazo abierto. El usuario fija el tiempo de calentamiento (referencia).
+El horno opera durante ese tiempo y se detiene. No mide la temperatura
+final de la comida ni ajusta la potencia si el alimento tardó más o menos
+de lo esperado. El resultado depende enteramente de que el modelo inicial
+(``tanta potencia durante tanto tiempo produce tal temperatura'') sea correcto.
+
+\subsection{Ventajas del lazo abierto}
+
+\begin{itemize}
+  \item \textbf{Simplicidad:} no requiere sensor de salida, comparador ni
+    algoritmo de realimentación. Es más barato y fácil de implementar.
+  \item \textbf{Estabilidad garantizada:} si la planta es estable por sí
+    misma, el lazo abierto también lo es. No existe el riesgo de oscilaciones
+    inducidas por la realimentación.
+  \item \textbf{Ausencia de ruido de realimentación:} no introduce el ruido
+    del sensor al lazo de control.
+\end{itemize}
+
+\subsection{Desventajas del lazo abierto}
+
+\begin{itemize}
+  \item \textbf{Sensibilidad a perturbaciones:} si actúa una perturbación
+    sobre la planta, la salida se desvía del valor deseado y nada la corrige.
+  \item \textbf{Sensibilidad a variaciones de parámetros:} si los parámetros
+    de la planta cambian (temperatura, envejecimiento, carga), la salida
+    no coincidirá con la deseada.
+  \item \textbf{Error de estado estacionario:} en general, la salida no
+    coincide exactamente con la referencia salvo que el modelo de la planta
+    sea perfecto (lo cual nunca ocurre en la práctica).
+\end{itemize}
+
+%======================================================================
+\section{Sistema de control de lazo cerrado con realimentación}
+\label{sec:intro-lazo-cerrado}
+%======================================================================
+
+\begin{definicion}{Sistema de lazo cerrado}
+  Un \textbf{sistema de control de lazo cerrado} (o \textbf{sistema realimentado})
+  es aquel en el que la acción de control depende de la salida del proceso.
+  La salida se mide continuamente, se compara con la referencia y la diferencia
+  (error) se usa para generar la acción correctiva.
+\end{definicion}
+
+El diagrama de bloques estándar del lazo cerrado con realimentación negativa
+es el siguiente:
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[auto, node distance=2.8cm, thick]
+    %% Nodos
+    \node[input]   (ref)  {};
+    \node[sumnode, right of=ref, node distance=1.8cm] (suma) {};
+    \node[block,   right of=suma, node distance=3.2cm] (ctrl)   {Controlador\\$G_c(s)$};
+    \node[block,   right of=ctrl, node distance=3.8cm] (planta) {Planta\\$G_p(s)$};
+    \node[output,  right of=planta, node distance=2.5cm] (out) {};
+    \node[block,   below of=planta, node distance=1.8cm] (sensor) {Sensor\\$H(s)$};
+    \node[junction, below of=out, node distance=1.8cm] (junc) {};
+
+    %% Flechas del lazo directo
+    \draw[->] (ref)    -- node[above, pos=0.5] {$R(s)$} (suma);
+    \draw[->] (suma)   -- node[above] {$E(s)$} (ctrl);
+    \draw[->] (ctrl)   -- node[above] {$U(s)$} (planta);
+    \draw[->] (planta) -- node[above, name=yout, pos=0.4] {$Y(s)$} (out);
+
+    %% Lazo de realimentación
+    \draw[-]  (yout)  |- (junc);
+    \draw[->] (junc)  -- (sensor);
+    \draw[->] (sensor) -| node[pos=0.95, left] {$-$}
+                          node[near end, below] {$B(s)$} (suma);
+
+    %% Signo positivo del sumador
+    \node[above left=0.15cm of suma, font=\small] {$+$};
+  \end{tikzpicture}
+  \caption{Diagrama de bloques general de un sistema de control de
+           \textbf{lazo cerrado con realimentación negativa}.
+           El signo $-$ en el sumador indica que la señal de realimentación
+           se resta de la referencia para generar el error.}
+  \label{fig:lazo-cerrado}
+\end{figure}
+
+\subsection{Mecanismo de la realimentación negativa}
+
+El mecanismo de corrección opera de la siguiente manera, paso a paso:
+
+\begin{enumerate}
+  \item La salida $Y(s)$ es medida por el sensor, generando $B(s) = H(s) \cdot Y(s)$.
+  \item El sumador calcula $E(s) = R(s) - B(s)$.
+  \item Si $Y(s) > R(s)/H(s)$ (salida demasiado alta), entonces $E(s) < 0$ y el
+    controlador reduce su acción $U(s)$, frenando la planta.
+  \item Si $Y(s) < R(s)/H(s)$ (salida demasiado baja), entonces $E(s) > 0$ y el
+    controlador aumenta su acción $U(s)$, empujando la planta hacia el valor deseado.
+  \item El proceso se repite continuamente, manteniendo el error pequeño.
+\end{enumerate}
+
+Este mecanismo es \textbf{negativo} (se resta la realimentación) porque actúa
+\textit{en contra} de la desviación: si la salida sube demasiado, la acción
+correctiva la baja. Esto es lo que garantiza la estabilidad del lazo.
+
+\interfisica{La realimentación negativa es el principio que subyace en
+innumerables sistemas naturales y artificiales: el termostato del hogar,
+la homeostasis del cuerpo humano (temperatura, glucosa en sangre), el
+regulador de velocidad de un motor, el AVR de un generador.}
+
+\subsection{La función de transferencia de lazo cerrado}
+
+Si los bloques tienen funciones de transferencia $G_c(s)$, $G_p(s)$ y $H(s)$,
+podemos obtener la función de transferencia del lazo cerrado. Definimos:
+\begin{equation}
+  G(s) = G_c(s)\,G_p(s)
+  \qquad \text{(función de transferencia de lazo directo)}
+  \label{eq:lazo-directo}
+\end{equation}
+
+De la figura, la relación entre la salida y la referencia es:
+\begin{align}
+  Y(s)   &= G(s)\,E(s) \label{eq:lc-1}\\
+  E(s)   &= R(s) - H(s)\,Y(s) \label{eq:lc-2}
+\end{align}
+
+Sustituyendo \eqref{eq:lc-2} en \eqref{eq:lc-1}:
+\begin{align}
+  Y(s) &= G(s)\bigl[R(s) - H(s)\,Y(s)\bigr] \notag\\
+  Y(s) + G(s)\,H(s)\,Y(s) &= G(s)\,R(s) \notag\\
+  Y(s)\bigl[1 + G(s)\,H(s)\bigr] &= G(s)\,R(s)
+\end{align}
+
+Por lo tanto, la función de transferencia de lazo cerrado es:
+
+\begin{resultado}[Función de transferencia de lazo cerrado]
+  \begin{equation}
+    \frac{Y(s)}{R(s)} = \frac{G(s)}{1 + G(s)\,H(s)}
+    = \frac{G_c(s)\,G_p(s)}{1 + G_c(s)\,G_p(s)\,H(s)}
+    \label{eq:ftlc}
+  \end{equation}
+\end{resultado}
+
+Esta es una de las fórmulas más importantes del curso. El denominador
+$1 + G(s)H(s)$ se denomina \textbf{polinomio característico} del sistema,
+y sus raíces (los \textbf{polos de lazo cerrado}) determinan la estabilidad
+y la dinámica del sistema \verCap{6}.
+
+Para el caso especial de \textbf{realimentación unitaria} ($H(s) = 1$):
+\begin{equation}
+  \frac{Y(s)}{R(s)} = \frac{G(s)}{1 + G(s)}
+  \label{eq:ftlc-unitaria}
+\end{equation}
+
+\subsection{Ventajas del lazo cerrado}
+
+\begin{itemize}
+  \item \textbf{Rechazo de perturbaciones:} si $d(t)$ perturba la planta,
+    el sensor lo detecta a través de la variación en $y(t)$ y el controlador
+    genera la corrección. El sistema ``lucha'' contra la perturbación.
+  \item \textbf{Reducción de la sensibilidad a variaciones de parámetros:}
+    la realimentación reduce el efecto de las incertidumbres en el modelo
+    de la planta (demostrado formalmente en capítulos posteriores).
+  \item \textbf{Mejora de la linealidad:} la no linealidad de la planta
+    se reduce con realimentación de alta ganancia.
+  \item \textbf{Posibilidad de modificar la dinámica:} el controlador permite
+    acelerar la respuesta, aumentar el amortiguamiento o eliminar el error
+    estacionario, aunque la planta por sí misma sea lenta o tenga error.
+\end{itemize}
+
+\subsection{Desventajas del lazo cerrado}
+
+\begin{itemize}
+  \item \textbf{Posibilidad de inestabilidad:} si el controlador no está
+    bien diseñado, la realimentación puede provocar oscilaciones que crecen
+    hasta saturar los actuadores. Un sistema inestable es inutilizable y,
+    en la práctica, peligroso.
+  \item \textbf{Mayor complejidad y costo:} se necesitan sensores, comparadores,
+    cableado adicional y algoritmos de control.
+  \item \textbf{Ruido de medición amplificado:} el ruido del sensor ingresa
+    al lazo y puede contaminar la acción de control, especialmente si se
+    usa acción derivativa.
+\end{itemize}
+
+%======================================================================
+\section{Comparación: lazo abierto vs.\ lazo cerrado}
+\label{sec:intro-comparacion}
+%======================================================================
+
+La \cref{tab:oa-vs-oc} resume las diferencias entre ambos tipos de sistemas.
+La elección entre uno y otro depende del nivel de precisión requerido, el
+costo admisible y las características del proceso.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Comparación entre sistemas de control de lazo abierto y lazo cerrado.}
+  \label{tab:oa-vs-oc}
+  \begin{tabularx}{\textwidth}{@{} l X X @{}}
+    \toprule
+    \textbf{Característica} & \textbf{Lazo abierto} & \textbf{Lazo cerrado} \\
+    \midrule
+    Necesidad de sensor & No & Sí (necesario) \\
+    Costo y complejidad & Bajo & Mayor \\
+    Precisión ante perturbaciones & Baja & Alta \\
+    Sensibilidad a parámetros & Alta & Reducida \\
+    Error en estado estacionario & Generalmente alto & Puede ser nulo (con integrador) \\
+    Estabilidad & Siempre (si la planta es estable) & Puede ser inestable si mal diseñado \\
+    Velocidad de respuesta & Depende solo de la planta & Puede mejorarse con el controlador \\
+    Sensibilidad al ruido de medición & No afectado & Puede afectar \\
+    Aplicaciones típicas & Temporizadores, semáforos fijos,
+                           lavadoras sin sensor & Servo-motores, reguladores de tensión,
+                           control de temperatura, AVR \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\begin{observacion}
+  En la práctica industrial moderna, la gran mayoría de los sistemas de
+  control son de lazo cerrado. El lazo abierto se reserva para procesos
+  donde la precisión no es crítica, la perturbación es muy pequeña o el
+  sensor es demasiado costoso. Un buen ingeniero debe saber identificar
+  cuándo cada opción es la apropiada.
+\end{observacion}
+
+%======================================================================
+\section{Especificaciones de desempeño}
+\label{sec:intro-especificaciones}
+%======================================================================
+
+Cuando se diseña un sistema de control, no basta con que la salida
+``eventualmente'' llegue al valor deseado. Se especifican criterios cuantitativos
+que el sistema debe satisfacer. Estas especificaciones se dividen en tres grupos:
+
+\subsection{Estabilidad}
+
+La estabilidad es la especificación más fundamental. Un sistema es
+\textbf{estable} (BIBO: \textit{Bounded Input Bounded Output}) si para
+toda entrada acotada la salida es también acotada. En términos prácticos:
+si perturbamos el sistema y luego lo dejamos libre, la salida debe volver
+a un valor de equilibrio en lugar de crecer indefinidamente.
+
+\begin{definicion}{Estabilidad BIBO}
+  Un sistema lineal e invariante en el tiempo (LTI) es \textbf{estable} si
+  y solo si todos los polos de su función de transferencia de lazo cerrado
+  tienen parte real negativa (están en el semiplano izquierdo del plano
+  complejo $s$).
+\end{definicion}
+
+Un sistema inestable no puede funcionar en la práctica: la salida crece hasta
+saturar los actuadores, lo que generalmente destruye el equipo. \textbf{La
+estabilidad es una condición necesaria antes de evaluar cualquier otra
+especificación.}
+
+\subsection{Especificaciones en el dominio del tiempo}
+
+Una vez garantizada la estabilidad, se evalúa la \textbf{respuesta transitoria}:
+cómo llega el sistema al valor deseado.
+
+% [INSERTAR FIGURA: Respuesta al escalón típica de un sistema de segundo orden
+%  subamortiguado. Marcar claramente: tiempo de subida tr, tiempo pico tp,
+%  sobreoscilación Mp, tiempo de establecimiento ts, valor final y_final.
+%  El alumno debe identificar estas magnitudes y entender que cada una
+%  corresponde a una especificación de diseño diferente.]
+\figplaceholder{Respuesta al escalón de un sistema de segundo orden.
+Se muestran: tiempo de subida $t_r$, tiempo pico $t_p$, sobreoscilación
+porcentual $M_p$, tiempo de establecimiento $t_s$ y valor final $y_\infty$.}
+
+Las especificaciones temporales más importantes son:
+
+\begin{description}
+  \item[Tiempo de subida ($t_r$):] tiempo que tarda la respuesta en pasar
+    del 10\% al 90\% de su valor final. Cuantifica la \textit{rapidez} de
+    la respuesta. Un $t_r$ pequeño significa un sistema rápido.
+  \item[Tiempo pico ($t_p$):] tiempo en que la respuesta alcanza su primer
+    máximo (sobreoscilación). Solo existe en sistemas subamortiguados.
+  \item[Sobreoscilación porcentual ($M_p$):] porcentaje que la respuesta
+    supera el valor final antes de establecerse:
+    \begin{equation}
+      M_p = \frac{y(t_p) - y(\infty)}{y(\infty)} \times 100\%
+    \end{equation}
+    Un $M_p$ alto indica escaso amortiguamiento. En muchas aplicaciones
+    se especifica $M_p \leq 5\%$ o $M_p \leq 10\%$.
+  \item[Tiempo de establecimiento ($t_s$):] tiempo a partir del cual la
+    respuesta permanece dentro de una banda de $\pm 2\%$ (o $\pm 5\%$)
+    alrededor del valor final. Cuantifica cuándo el transitorio ha terminado.
+  \item[Error en estado estacionario ($e_{ss}$):] diferencia entre la
+    referencia y la salida una vez que el transitorio ha desaparecido:
+    \begin{equation}
+      e_{ss} = \lim_{t\to\infty} e(t) = \lim_{t\to\infty} \bigl[r(t) - y(t)\bigr]
+    \end{equation}
+    Un controlador bien diseñado logra $e_{ss} = 0$ para entradas de
+    referencia de tipo escalón o rampa \verCap{5}.
+\end{description}
+
+\subsection{Especificaciones en el dominio de la frecuencia}
+
+Además del dominio temporal, se usan especificaciones en el dominio de la
+frecuencia, relacionadas con la respuesta del sistema a señales sinusoidales:
+
+\begin{description}
+  \item[Margen de ganancia (MG):] cuánto se puede aumentar la ganancia
+    del lazo antes de que el sistema se vuelva inestable. Se mide en decibeles.
+    Un valor típico requerido es $MG \geq \SI{6}{\decibel}$.
+  \item[Margen de fase (MF):] cuánto retardo de fase puede soportar el lazo
+    antes de inestabilizarse. Un valor típico requerido es $MF \geq 30\grados$.
+  \item[Ancho de banda ($\omega_{BW}$):] rango de frecuencias para el que
+    el sistema responde adecuadamente. Relacionado con la velocidad de respuesta.
+\end{description}
+
+Estos conceptos se desarrollan en detalle en los capítulos de respuesta en
+frecuencia \verCap{9} y diagramas de Bode \verCap{10}.
+
+\begin{nota}[Conflicto entre especificaciones]
+  Las especificaciones de desempeño están en conflicto entre sí.
+  Un sistema más rápido (menor $t_r$) tiende a tener mayor sobreoscilación
+  y menor margen de fase. El diseño de controladores es un problema de
+  compromiso (\textit{trade-off}) entre especificaciones contradictorias.
+\end{nota}
+
+%======================================================================
+\section{Clasificación de sistemas de control}
+\label{sec:intro-clasificacion}
+%======================================================================
+
+Los sistemas de control pueden clasificarse desde distintos puntos de vista:
+
+\subsection{Por el tipo de señal}
+
+\begin{description}
+  \item[Sistemas continuos (tiempo continuo):] las señales son funciones
+    continuas del tiempo. Se analizan con la transformada de Laplace.
+    Este es el enfoque principal del curso.
+  \item[Sistemas discretos (tiempo discreto):] las señales son muestreadas
+    a intervalos regulares. Se analizan con la transformada $\mathcal{Z}$.
+    Son propios de los sistemas de control digital implementados en microcontroladores.
+\end{description}
+
+\subsection{Por el tipo de modelo}
+
+\begin{description}
+  \item[Sistemas lineales e invariantes en el tiempo (LTI):] satisfacen los
+    principios de superposición y homogeneidad. Sus parámetros no cambian con
+    el tiempo. Son el objeto de estudio del curso: ecuaciones diferenciales
+    lineales de coeficientes constantes.
+  \item[Sistemas no lineales:] no satisfacen la superposición. En la práctica,
+    todos los sistemas reales son no lineales en algún grado. Para rangos de
+    operación limitados, la linealización en torno a un punto de operación
+    permite aplicar las herramientas del control lineal.
+  \item[Sistemas variantes en el tiempo (LTV):] los parámetros del modelo
+    cambian con el tiempo. Requieren técnicas de control adaptivo.
+\end{description}
+
+\subsection{Por la cantidad de entradas y salidas}
+
+\begin{description}
+  \item[SISO (\textit{Single Input Single Output}):] una sola variable de
+    entrada controlable y una sola variable de salida medida. Es el caso
+    que se estudia en la mayor parte del curso.
+  \item[MIMO (\textit{Multiple Input Multiple Output}):] múltiples entradas
+    y salidas, con posibles interacciones entre ellas. Requiere el enfoque
+    de variables de estado \verCap{14}.
+\end{description}
+
+\subsection{Por el tipo de acción de control}
+
+\begin{description}
+  \item[Control de dos posiciones (on/off):] el actuador solo tiene dos
+    estados: encendido o apagado. Ejemplo: termostato doméstico, interruptor
+    automático. Simple pero introduce oscilaciones permanentes.
+  \item[Control proporcional (P):] la acción de control es proporcional
+    al error. Reduce el error pero no lo elimina completamente.
+  \item[Control integral (I):] integra el error en el tiempo. Elimina el
+    error estacionario pero puede reducir la estabilidad.
+  \item[Control PID:] combinación de los tres anteriores. Es el estándar
+    industrial \verCap{13}.
+\end{description}
+
+%======================================================================
+\section{Ejemplo integrador: control de velocidad de un motor DC}
+\label{sec:intro-ejemplo-motor}
+%======================================================================
+
+Para ilustrar todos los conceptos anteriores, analizamos el control de
+velocidad de un motor de corriente continua (DC), uno de los sistemas
+de control más frecuentes en la ingeniería eléctrica.
+
+\subsection{Descripción del sistema}
+
+Un motor DC alimentado por tensión $v_a$ produce un par electromagnético
+que hace girar una carga mecánica. La velocidad angular $\omega(t)$ depende
+del equilibrio entre el par motor y el par resistente de la carga.
+
+Las variables del sistema son:
+\begin{itemize}
+  \item \textbf{Variable controlada:} velocidad angular $\omega(t)$
+    [\si{\radian\per\second}] o $n(t)$ [RPM].
+  \item \textbf{Variable de referencia:} velocidad deseada $\omega^*(t)$.
+  \item \textbf{Variable de control:} tensión de armadura $v_a(t)$ [\si{\volt}].
+  \item \textbf{Perturbación:} par de carga $T_c(t)$ [\si{\newton\meter}].
+\end{itemize}
+
+\subsection{Modelo simplificado}
+
+Para este ejemplo introductorio, usamos el modelo de primer orden del motor
+(sin inductancia de armadura):
+\begin{equation}
+  \tau_m \frac{d\omega}{dt} + \omega = K_m\,v_a - K_c\,T_c
+  \label{eq:motor-dc}
+\end{equation}
+donde $\tau_m$ es la constante de tiempo mecánica, $K_m$ la ganancia del
+motor y $K_c$ la constante de perturbación de carga.
+
+En el dominio de Laplace (con condiciones iniciales nulas):
+\begin{equation}
+  G_p(s) = \frac{\Omega(s)}{V_a(s)} = \frac{K_m}{\tau_m\,s + 1}
+  \label{eq:ft-motor}
+\end{equation}
+Este es el modelo de un sistema de \textbf{primer orden}, el más simple posible.
+
+\subsection{Análisis de lazo abierto}
+
+En lazo abierto, la velocidad en estado estacionario ante una tensión
+constante $V_a = V_0$ es:
+\begin{equation}
+  \omega_{ss}^{OL} = K_m\,V_0 - K_c\,T_c
+  \label{eq:motor-oa}
+\end{equation}
+
+Si la carga varía ($T_c$ cambia), la velocidad cambia proporcionalmente.
+No hay ningún mecanismo automático de corrección.
+
+\subsection{Control de lazo cerrado con sensor tacométrico}
+
+Si instalamos un tacómetro (sensor de velocidad con ganancia $K_t$
+[\si{\volt\per\radian\per\second}]) y un controlador proporcional de
+ganancia $K_c^p$, el lazo cerrado produce:
+
+\begin{align}
+  E(s) &= \Omega^*(s) - K_t\,\Omega(s) \\
+  V_a(s) &= K_c^p\,E(s)
+\end{align}
+
+La función de transferencia de lazo cerrado resulta:
+\begin{equation}
+  \frac{\Omega(s)}{\Omega^*(s)} =
+  \frac{K_c^p\,K_m/\tau_m}{s + (1 + K_c^p\,K_m\,K_t)/\tau_m}
+  \label{eq:motor-lc}
+\end{equation}
+
+La constante de tiempo de lazo cerrado es:
+\begin{equation}
+  \tau_{CL} = \frac{\tau_m}{1 + K_c^p\,K_m\,K_t}
+  \label{eq:tau-cl}
+\end{equation}
+
+\interfisica{La constante de tiempo de lazo cerrado es \textbf{menor} que
+la de lazo abierto en un factor $(1 + K_c^p K_m K_t)$. Esto significa que
+el lazo cerrado \textbf{responde más rápido} que la planta sola. Cuanto
+mayor sea la ganancia del controlador $K_c^p$, más rápida es la respuesta.
+Sin embargo, como veremos en capítulos posteriores, existe un límite práctico
+a cuánto se puede aumentar la ganancia antes de comprometer la estabilidad.}
+
+% [INSERTAR FIGURA: Diagrama de bloques del control de velocidad de motor DC
+%  en lazo cerrado. Mostrar: referencia de velocidad omega*, sumador, controlador
+%  proporcional Kcp, modelo del motor Km/(tau_m*s+1), salida omega, tacómetro Kt.
+%  Marcar la perturbación de carga Tc. El alumno debe identificar todos los
+%  componentes enumerados en la sección anterior.]
+\figplaceholder{Diagrama de bloques del control de velocidad de motor DC
+en lazo cerrado. Referencia $\omega^*$, controlador proporcional $K_c^p$,
+planta $K_m/(\tau_m s + 1)$, tacómetro $K_t$, perturbación $T_c$.}
+
+%======================================================================
+\section{Ejercicios resueltos}
+\label{sec:intro-ejercicios-resueltos}
+%======================================================================
+
+\begin{ejercicioresuelto}{Identificación de componentes de un sistema de control (Nivel básico)}
+
+\textbf{Enunciado.} Un horno industrial de tratamiento térmico usa un controlador
+electrónico para mantener la temperatura a \SI{800}{\celsius}. Un termopar
+mide la temperatura real. El calentamiento se realiza mediante resistencias
+eléctricas alimentadas por un tiristor que regula la potencia. Identificá
+los componentes del sistema de control y trazá un diagrama de bloques.
+
+\textbf{Análisis conceptual.} Debemos identificar: planta, actuador, sensor,
+controlador, referencia, variable controlada y señal de error. La descripción
+contiene todos los componentes típicos de un lazo cerrado.
+
+\textbf{Desarrollo.}
+\begin{itemize}
+  \item \textbf{Variable controlada (salida):} temperatura del horno $T(t)$ [\si{\celsius}].
+  \item \textbf{Planta:} el horno industrial (masa metálica, aislamiento,
+    geometría interna). Convierte la potencia eléctrica en calor y la distribuye.
+  \item \textbf{Actuador:} el circuito de tiristores (rectificador controlado
+    de silicio, SCR). Convierte la señal de control de baja potencia (ángulo
+    de disparo) en la potencia eléctrica de las resistencias.
+  \item \textbf{Sensor (transductor):} el termopar tipo K (o tipo R para altas
+    temperaturas). Convierte la temperatura en una señal de tensión milimétrica.
+  \item \textbf{Controlador:} el controlador electrónico de temperatura (un
+    PID industrial). Procesa el error y genera el ángulo de disparo del tiristor.
+  \item \textbf{Señal de referencia:} la temperatura de consigna \SI{800}{\celsius},
+    introducida por el operario.
+  \item \textbf{Señal de error:} $e(t) = T^*(t) - T_{medida}(t)$.
+  \item \textbf{Perturbaciones:} apertura de la puerta del horno, variaciones
+    en el material a tratar, fluctuaciones de la tensión de red.
+\end{itemize}
+
+El diagrama de bloques es:
+\begin{center}
+\begin{tikzpicture}[auto, node distance=2.4cm, thick, font=\small]
+  \node[input] (ref) {};
+  \node[sumnode, right of=ref, node distance=1.7cm] (suma) {};
+  \node[block, right of=suma, node distance=3.0cm] (ctrl) {Controlador\\PID};
+  \node[block, right of=ctrl, node distance=3.2cm] (act) {Tiristor\\(Actuador)};
+  \node[block, right of=act, node distance=3.2cm] (horno) {Horno\\(Planta)};
+  \node[output, right of=horno, node distance=2.2cm] (out) {};
+  \node[block, below of=act, node distance=1.7cm] (sensor) {Termopar\\(Sensor)};
+  \node[junction, below of=out, node distance=1.7cm] (junc) {};
+
+  \draw[->] (ref)   -- node[above, pos=0.5] {$T^*$} (suma);
+  \draw[->] (suma)  -- node[above] {$e(t)$} (ctrl);
+  \draw[->] (ctrl)  -- node[above, font=\tiny, align=center] {ángulo de\\disparo} (act);
+  \draw[->] (act)   -- node[above, font=\tiny, align=center] {potencia\\{[kW]}} (horno);
+  \draw[->] (horno) -- node[above, name=temp, pos=0.4] {$T(t)$} (out);
+  \draw[-]  (temp)  |- (junc);
+  \draw[->] (junc)  -- (sensor);
+  \draw[->] (sensor) -| node[pos=0.94, left] {$-$}
+                        node[near end, below, font=\tiny] {$T_{med}$} (suma);
+  \node[above left=0.12cm of suma, font=\tiny] {$+$};
+\end{tikzpicture}
+\end{center}
+
+\textbf{Interpretación.} Este sistema de lazo cerrado mantiene la temperatura
+a \SI{800}{\celsius} incluso si alguien abre la puerta del horno (perturbación):
+el termopar detecta la caída de temperatura, el error se hace positivo, el
+controlador aumenta la potencia y el horno recupera la temperatura. En lazo
+abierto, eso no sería posible.
+\end{ejercicioresuelto}
+
+%% ---------------------------------------------------------------
+\begin{ejercicioresuelto}{Comparación lazo abierto vs.\ lazo cerrado en un calentador eléctrico (Nivel intermedio)}
+
+\textbf{Enunciado.} Un calentador eléctrico tiene los siguientes datos:
+\begin{itemize}
+  \item Potencia de calentamiento: $P = \SI{1200}{\watt}$
+  \item Masa de agua: $m = \SI{4}{\kilogram}$
+  \item Calor específico del agua: $c_p = \SI{4180}{\joule\per\kilogram\per\celsius}$
+  \item Temperatura inicial: $T_0 = \SI{20}{\celsius}$
+  \item Temperatura deseada: $T^* = \SI{65}{\celsius}$
+\end{itemize}
+
+\textbf{a)} En lazo abierto con temporizador fijo de $t = \SI{615}{\second}$:
+¿qué temperatura se alcanza? ¿cuál es el error?
+
+\textbf{b)} Si alguien usa \SI{1}{\kilogram} de agua (deja $m = \SI{3}{\kilogram}$),
+¿qué temperatura alcanza el sistema en lazo abierto con el mismo temporizador?
+
+\textbf{c)} Con un termostato (lazo cerrado), describí cualitativamente qué ocurre
+en el caso b). ¿Cuál es el error estacionario?
+
+\textbf{Análisis conceptual.} La energía entregada por el calentador en un
+tiempo $t$ es $Q = P \cdot t$. La temperatura final se obtiene del balance
+de energía: $Q = m\,c_p\,\Delta T$.
+
+\textbf{Desarrollo.}
+
+\textbf{Parte a)} Energía entregada:
+\begin{equation*}
+  Q = P\,t = 1200 \times 615 = \SI{738000}{\joule} = \SI{738}{\kilo\joule}
+\end{equation*}
+Aumento de temperatura:
+\begin{equation*}
+  \Delta T = \frac{Q}{m\,c_p} = \frac{738000}{4 \times 4180} = \frac{738000}{16720}
+  \approx \SI{44.1}{\celsius}
+\end{equation*}
+Temperatura final:
+\begin{equation*}
+  T_f^{(a)} = T_0 + \Delta T = 20 + 44.1 = \SI{64.1}{\celsius}
+\end{equation*}
+Error en lazo abierto (caso nominal):
+\begin{equation*}
+  e_{OL}^{(a)} = T^* - T_f^{(a)} = 65 - 64.1 \approx \SI{0.9}{\celsius}
+\end{equation*}
+Pequeño, porque el temporizador fue calibrado para este caso.
+
+\textbf{Parte b)} Misma energía $Q = \SI{738}{\kilo\joule}$, pero $m = \SI{3}{\kilogram}$:
+\begin{equation*}
+  \Delta T' = \frac{738000}{3 \times 4180} = \frac{738000}{12540}
+  \approx \SI{58.9}{\celsius}
+\end{equation*}
+\begin{equation*}
+  T_f^{(b)} = 20 + 58.9 = \SI{78.9}{\celsius}
+\end{equation*}
+Error en lazo abierto con la perturbación:
+\begin{equation*}
+  e_{OL}^{(b)} = 65 - 78.9 = \SI{-13.9}{\celsius}
+\end{equation*}
+El agua se sobrecalienta casi \SI{14}{\celsius} por encima del objetivo.
+Con menos agua, el calentamiento es más rápido y el temporizador fijo
+no puede adaptar su tiempo.
+
+\textbf{Parte c)} Con termostato (lazo cerrado): el termostato mide la
+temperatura continuamente. Cuando $T < \SI{65}{\celsius}$, el calentador
+está encendido; cuando $T \geq \SI{65}{\celsius}$, se apaga.
+Independientemente de si hay 3 kg o 4 kg de agua, el sistema se detiene
+exactamente cuando alcanza \SI{65}{\celsius}. El error estacionario es cero
+(o mínimo, según la histéresis del termostato).
+
+\textbf{Interpretación.} Este ejemplo ilustra con claridad la principal
+ventaja del lazo cerrado: \textbf{rechazo de perturbaciones}. El lazo abierto
+funciona bien solo para las condiciones para las que fue calibrado. Cualquier
+desviación en los parámetros produce un error no corregible.
+\end{ejercicioresuelto}
+
+%% ---------------------------------------------------------------
+\begin{ejercicioresuelto}{Control proporcional de velocidad de motor DC (Tipo examen)}
+
+\textbf{Enunciado.} Un motor DC tiene las siguientes características:
+\begin{itemize}
+  \item Ganancia estática: $K_m = \SI{3}{RPM/V}$
+  \item Constante de tiempo mecánica: $\tau_m = \SI{0.4}{\second}$
+  \item Ganancia del sensor tacométrico: $K_t = \SI{0.02}{V/RPM}$
+\end{itemize}
+La velocidad de referencia es $n^* = \SI{1000}{RPM}$.
+El controlador es proporcional con ganancia $K_c^p = 50$.
+
+\textbf{a)} ¿Cuál es la tensión de referencia equivalente?
+
+\textbf{b)} Calculá la velocidad en estado estacionario en lazo cerrado
+(sin perturbación) y el error porcentual.
+
+\textbf{c)} Si la perturbación de carga produce una reducción de
+\SI{200}{RPM} en lazo abierto, ¿cuánto reduce esa misma perturbación
+la velocidad en lazo cerrado?
+
+\textbf{d)} ¿Cuál es la constante de tiempo del lazo cerrado?
+
+\textbf{Desarrollo.}
+
+\textbf{Parte a)} La referencia eléctrica equivalente:
+\begin{equation*}
+  V_{ref} = \frac{n^*}{K_m} = \frac{1000}{3} \approx \SI{333.3}{\volt}
+\end{equation*}
+(Esta es la tensión que, en lazo abierto, produciría la velocidad nominal.
+En lazo cerrado, la referencia se expresa como la consigna de velocidad
+directamente, y el bloque comparador hace la resta en RPM.)
+
+\textbf{Parte b)} Ganancia de lazo abierto:
+\begin{equation*}
+  G_0 = K_c^p \cdot K_m \cdot K_t = 50 \times 3 \times 0.02 = 3
+\end{equation*}
+Velocidad en estado estacionario de lazo cerrado con referencia $n^* = \SI{1000}{RPM}$:
+\begin{equation*}
+  n_{ss}^{CL} = \frac{K_c^p \cdot K_m}{1 + K_c^p \cdot K_m \cdot K_t} \cdot
+  \frac{n^*}{K_m/1}
+\end{equation*}
+Usando la fórmula de lazo cerrado con ganancia $G_0$:
+\begin{equation*}
+  n_{ss}^{CL} = \frac{G_0}{1 + G_0} \cdot n^* = \frac{3}{1+3} \cdot 1000
+  = \SI{750}{RPM}
+\end{equation*}
+Error estacionario en lazo cerrado:
+\begin{equation*}
+  e_{ss}^{CL} = n^* - n_{ss}^{CL} = 1000 - 750 = \SI{250}{RPM}
+  \quad \Rightarrow \quad 25\%
+\end{equation*}
+
+\textbf{Parte c)} Efecto de la perturbación. En lazo abierto, la perturbación
+produce $\Delta n_{OL} = \SI{-200}{RPM}$.
+
+En lazo cerrado, la perturbación se atenúa por el factor $\dfrac{1}{1 + G_0}$:
+\begin{equation*}
+  \Delta n_{CL} = \frac{\Delta n_{OL}}{1 + G_0} = \frac{-200}{1 + 3}
+  = \SI{-50}{RPM}
+\end{equation*}
+La perturbación solo produce $\SI{-50}{RPM}$ en lazo cerrado frente a
+$\SI{-200}{RPM}$ en lazo abierto: una mejora de \textbf{4 veces} (igual al
+factor $1 + G_0 = 4$).
+
+\textbf{Parte d)} Constante de tiempo del lazo cerrado:
+\begin{equation*}
+  \tau_{CL} = \frac{\tau_m}{1 + G_0} = \frac{0.4}{1 + 3} = \SI{0.1}{\second}
+\end{equation*}
+El lazo cerrado es 4 veces más rápido que la planta sola.
+
+\textbf{Interpretación.} Los resultados demuestran las fortalezas y limitaciones
+del control proporcional:
+\begin{itemize}
+  \item \textbf{Fortaleza:} mejora el rechazo de perturbaciones (factor $1 + G_0$)
+    y acelera la respuesta.
+  \item \textbf{Limitación:} no elimina el error estacionario. Con $K_c^p = 50$
+    y $G_0 = 3$, el error es del 25\%. Para eliminarlo habría que usar acción
+    integral (controlador PI o PID) \verCap{13}.
+\end{itemize}
+Aumentar $K_c^p$ reduce el error estacionario, pero tiene un límite: a partir de
+cierta ganancia el sistema se vuelve oscilatorio e inestable. Encontrar el
+balance entre precisión y estabilidad es el problema central del diseño de
+controladores.
+\end{ejercicioresuelto}
+
+%======================================================================
+\section{Ejercicios propuestos}
+\label{sec:intro-propuestos}
+%======================================================================
+
+\begin{enumerate}
+  \item Un sistema de control de nivel de agua en un tanque industrial usa un
+    flotante (sensor), una válvula motorizada (actuador) y un controlador PLC.
+    El nivel deseado es de \SI{2.5}{\meter}.
+    \begin{enumerate}
+      \item Identificá todos los componentes del sistema.
+      \item Trazá el diagrama de bloques indicando señales y bloques.
+      \item ¿Qué tipo de perturbaciones puede afectar el sistema?
+      \item ¿Qué ocurriría si el flotante falla (queda en la posición de ``nivel
+        correcto'')? ¿Qué tipo de falla provoca en el lazo de control?
+    \end{enumerate}
+
+  \item Un regulador automático de tensión (AVR) de un generador sincrónico
+    de \SI{10}{\mega\volt\ampere} mantiene la tensión terminal en
+    \SI{13.8}{\kilo\volt}. El transformador de medida de tensión (TV) tiene
+    una relación de \num{13800/110}.
+    \begin{enumerate}
+      \item ¿Cuál es la tensión de referencia en el secundario del TV?
+      \item Si el TV tiene un error del 0.5\%, ¿cuál es el error máximo en
+        la tensión terminal del generador?
+      \item Proponé un esquema de lazo cerrado para este sistema.
+    \end{enumerate}
+
+  \item Para el motor DC del Ejercicio Resuelto 1.3, si se desea un error
+    estacionario máximo del 2\%:
+    \begin{enumerate}
+      \item ¿Cuál es la ganancia de lazo mínima $G_0$ necesaria?
+      \item ¿Cuál debe ser $K_c^p$ para lograr esa ganancia?
+      \item ¿Cuánto se reduce la perturbación de lazo con esa ganancia?
+    \end{enumerate}
+    \textit{Pista: $e_{ss}\% = \frac{1}{1+G_0} \times 100\%$.}
+
+  \item Un inversor fotovoltaico debe inyectar corriente senoidal a la red
+    (220 V, 50 Hz). El control de corriente tiene una referencia de corriente
+    $i^*(t) = I_m\,\sen(\omega t)$. Describí cualitativamente:
+    \begin{enumerate}
+      \item ¿Por qué es necesario un lazo cerrado (y no lazo abierto)?
+      \item ¿Qué sensor se usaría para medir la corriente inyectada?
+      \item ¿Qué tipo de perturbaciones afectan este sistema?
+    \end{enumerate}
+
+  \item \textbf{(Nivel avanzado)} Un sistema de control tiene la función
+    de transferencia de lazo cerrado:
+    \begin{equation*}
+      T(s) = \frac{10}{s^2 + 4s + 10}
+    \end{equation*}
+    \begin{enumerate}
+      \item Sin calcular nada, indicá si el sistema es estable (analizá los
+        signos de los coeficientes del denominador).
+      \item ¿Es este un sistema de primer o segundo orden? ¿Cómo lo sabés?
+      \item ¿Qué ganancia estática tiene este sistema? \textit{Pista: evaluá $T(0)$.}
+      \item ¿Cuál es el error estacionario ante una entrada escalón unitario?
+    \end{enumerate}
+\end{enumerate}
+
+%======================================================================
+\section{Implementación en MATLAB}
+\label{sec:intro-matlab}
+%======================================================================
+
+Esta sección introduce las herramientas básicas de MATLAB para análisis de
+sistemas de control. Se asume que se tiene instalado MATLAB con el
+\textbf{Control System Toolbox}. Todo el código presentado está disponible
+en el archivo \texttt{matlab/cap01\_introduccion.m}.
+
+\subsection{Creación de funciones de transferencia}
+
+El objeto fundamental en MATLAB para sistemas LTI es la función de
+transferencia, creada con el comando \texttt{tf()}:
+
+\begin{matlabcodetitulo}{Creación de funciones de transferencia en MATLAB}
+% =========================================================
+% Archivo: matlab/cap01_introduccion.m
+% Objetivo: Introducción básica al Control System Toolbox
+% Capítulo 1: Introducción a los sistemas de control
+% =========================================================
+
+%% 1. Definición de funciones de transferencia
+% Sintaxis: G = tf(numerador, denominador)
+% Los vectores contienen los coeficientes de mayor a menor grado.
+
+% Motor DC: G(s) = Km / (tau_m * s + 1)
+Km   = 3;      % ganancia estatica [RPM/V]
+tau_m = 0.4;   % constante de tiempo [s]
+
+G_motor = tf(Km, [tau_m, 1]);
+
+disp('Funcion de transferencia del motor DC (lazo abierto):')
+G_motor
+
+% Sistema de segundo orden: G(s) = 10 / (s^2 + 4s + 10)
+G_2orden = tf(10, [1, 4, 10]);
+
+disp('Funcion de transferencia de segundo orden:')
+G_2orden
+\end{matlabcodetitulo}
+
+El resultado que muestra MATLAB es:
+\begin{verbatim}
+Funcion de transferencia del motor DC (lazo abierto):
+
+       3
+  -----------
+  0.4 s + 1
+\end{verbatim}
+
+\subsection{Respuesta al escalón}
+
+El comando \texttt{step()} grafica la respuesta del sistema ante una entrada
+escalón unitario ($r(t) = u(t)$):
+
+\begin{matlabcodetitulo}{Respuesta al escalón: lazo abierto vs. lazo cerrado}
+%% 2. Respuesta al escalon: lazo abierto vs. cerrado
+
+Kcp = 50;      % ganancia del controlador proporcional
+Kt  = 0.02;    % ganancia del tacometro [V/RPM]
+
+% Controlador proporcional
+G_ctrl = tf(Kcp, 1);
+
+% Sensor (ganancia constante)
+H_sensor = tf(Kt, 1);
+
+% Lazo abierto (solo la planta)
+G_LA = G_ctrl * G_motor;
+
+% Lazo cerrado con realimentacion negativa
+% feedback(G, H) calcula G/(1 + G*H)
+G_LC = feedback(G_LA, H_sensor);
+
+disp('Funcion de transferencia de lazo cerrado:')
+G_LC
+
+% Tiempo de simulacion
+t = 0:0.001:1.5;    % 0 a 1.5 segundos, paso 1 ms
+
+% Referencia: escalon de 1000 RPM
+n_ref = 1000;
+
+%% Grafica comparativa
+figure('Name', 'Cap. 1 - Lazo Abierto vs Lazo Cerrado', ...
+       'NumberTitle', 'off', 'Color', 'white');
+
+% Lazo abierto (normalizado para ver la forma)
+[y_LA, t_LA] = step(n_ref * G_motor / dcgain(G_motor), t);
+subplot(1, 2, 1)
+plot(t_LA, y_LA, 'b-', 'LineWidth', 2)
+hold on
+yline(n_ref, 'r--', 'Referencia', 'LineWidth', 1.5)
+title('Lazo Abierto (normalizado)', 'FontSize', 12)
+xlabel('Tiempo (s)')
+ylabel('Velocidad (RPM)')
+grid on; ylim([0, 1200])
+
+% Lazo cerrado
+[y_LC, t_LC] = step(n_ref * G_LC / dcgain(G_LC), t);
+subplot(1, 2, 2)
+plot(t_LC, y_LC, 'b-', 'LineWidth', 2)
+hold on
+yline(n_ref, 'r--', 'Referencia', 'LineWidth', 1.5)
+title('Lazo Cerrado (K_c = 50)', 'FontSize', 12)
+xlabel('Tiempo (s)')
+ylabel('Velocidad (RPM)')
+grid on; ylim([0, 1200])
+
+sgtitle('Respuesta al escalon: Lazo Abierto vs. Lazo Cerrado', 'FontSize', 14)
+\end{matlabcodetitulo}
+
+\textbf{Qué se espera observar:}
+\begin{itemize}
+  \item Ambas curvas son exponenciales crecientes (sistema de primer orden).
+  \item La curva de lazo cerrado alcanza el 63\% de su valor final en $\tau_{CL} = \SI{0.1}{\second}$,
+    4 veces más rápida que la de lazo abierto ($\tau_m = \SI{0.4}{\second}$).
+  \item El valor final de lazo cerrado ($n_{ss}^{CL} = \SI{750}{RPM}$) es menor
+    que la referencia ($\SI{1000}{RPM}$): este es el error estacionario del control proporcional.
+  \item El lazo abierto (normalizado) llega al 100\% de su valor final.
+\end{itemize}
+
+\subsection{Información de la respuesta al escalón}
+
+MATLAB puede calcular automáticamente los parámetros de la respuesta:
+
+\begin{matlabcodetitulo}{Análisis de la respuesta al escalón}
+%% 3. Informacion cuantitativa de la respuesta
+
+% stepinfo() devuelve una estructura con todos los parametros
+info_LA = stepinfo(G_motor);
+info_LC = stepinfo(G_LC);
+
+fprintf('=== LAZO ABIERTO ===\n')
+fprintf('Constante de tiempo: tau = %.3f s\n', tau_m)
+fprintf('Tiempo de subida   : tr  = %.3f s\n', info_LA.RiseTime)
+fprintf('Tiempo establecimiento: ts = %.3f s\n\n', info_LA.SettlingTime)
+
+fprintf('=== LAZO CERRADO (Kcp = %d) ===\n', Kcp)
+fprintf('Ganancia de lazo   : G0  = %.1f\n', Kcp * Km * Kt)
+fprintf('Constante de tiempo: tau_CL = %.3f s\n', tau_m / (1 + Kcp*Km*Kt))
+fprintf('Tiempo de subida   : tr  = %.3f s\n', info_LC.RiseTime)
+fprintf('Tiempo establecimiento: ts = %.3f s\n', info_LC.SettlingTime)
+fprintf('Ganancia CC (DC gain): %.4f\n', dcgain(G_LC))
+fprintf('Error estacionario: %.1f %%\n', (1 - dcgain(G_LC)) * 100)
+\end{matlabcodetitulo}
+
+\begin{observacion}[Nota sobre normalización en MATLAB]
+  En el código anterior se normaliza la respuesta al escalón del lazo
+  abierto para comparar la \textit{forma} de la curva, no su valor final.
+  En la práctica, el lazo abierto con $V_a = \SI{333}{\volt}$ produciría
+  \SI{1000}{RPM} (exactamente la referencia), pero solo bajo las condiciones
+  nominales. Sin perturbaciones, el lazo abierto da el valor correcto;
+  con perturbaciones, no.
+\end{observacion}
+
+\subsection{Exploración: efecto de la ganancia del controlador}
+
+El siguiente código permite visualizar cómo cambia la respuesta al variar
+la ganancia proporcional $K_c^p$:
+
+\begin{matlabcodetitulo}{Efecto de la ganancia proporcional en la respuesta}
+%% 4. Efecto de la ganancia del controlador
+
+figure('Name', 'Efecto de la ganancia proporcional', ...
+       'Color', 'white');
+
+Kcp_vals = [10, 25, 50, 100, 200];
+colores = lines(length(Kcp_vals));
+leyendas = {};
+
+for i = 1:length(Kcp_vals)
+    Kcp_i = Kcp_vals(i);
+    G_LC_i = feedback(tf(Kcp_i * Km, [tau_m, 1]), H_sensor);
+    G0_i   = Kcp_i * Km * Kt;
+    ess_i  = 100 / (1 + G0_i);    % error estacionario [%]
+
+    [y_i, t_i] = step(G_LC_i, t);
+    y_i_rpm = y_i * 1000 / dcgain(G_LC_i);  % escalar a RPM reales
+
+    plot(t_i, y_i_rpm, 'Color', colores(i,:), 'LineWidth', 1.8)
+    hold on
+    leyendas{end+1} = sprintf('K_c=%d  (e_{ss}=%.1f%%)', Kcp_i, ess_i);
+end
+
+yline(1000, 'k--', 'Referencia 1000 RPM', 'LineWidth', 1.5)
+xlabel('Tiempo (s)', 'FontSize', 12)
+ylabel('Velocidad (RPM)', 'FontSize', 12)
+title('Efecto de K_c^p sobre la respuesta al escalon', 'FontSize', 13)
+legend(leyendas, 'Location', 'southeast', 'FontSize', 9)
+grid on
+\end{matlabcodetitulo}
+
+\textbf{Qué se espera observar:}
+\begin{itemize}
+  \item A mayor ganancia $K_c^p$, el sistema responde más rápido (menor $\tau_{CL}$).
+  \item A mayor ganancia, el error estacionario disminuye: con $K_c^p = 200$
+    el error es $\approx 1.4\%$.
+  \item Todas las curvas son monótonas crecientes (sin sobreoscilación) porque
+    el sistema es de primer orden, sin importar la ganancia.
+  \item En un sistema de orden superior, al aumentar la ganancia la respuesta
+    eventualmente se volvería oscilatoria e inestable \verCap{6}.
+\end{itemize}
+
+%======================================================================
+\section{Gráficos sugeridos}
+\label{sec:intro-graficos}
+%======================================================================
+
+% [INSERTAR FIGURA: Respuesta al escalón del motor DC en lazo abierto y
+%  lazo cerrado (Kcp=50). Mostrar ambas curvas en el mismo gráfico para
+%  comparación directa. Marcar tau_m=0.4s y tau_CL=0.1s. Mostrar el
+%  error estacionario del lazo cerrado (750 RPM vs 1000 RPM).
+%  Generado por: matlab/cap01_introduccion.m, sección 2.]
+\figplaceholder{Respuesta al escalón: lazo abierto vs.\ lazo cerrado para
+el motor DC. Eje $x$: tiempo [\si{\second}], eje $y$: velocidad [RPM].
+Marcar $\tau_m = \SI{0.4}{\second}$ y $\tau_{CL} = \SI{0.1}{\second}$.
+Error estacionario visible: $n_{ss}^{CL} = \SI{750}{RPM}$ vs $n^* = \SI{1000}{RPM}$.}
+
+% [INSERTAR FIGURA: Efecto de la ganancia proporcional sobre la respuesta
+%  al escalón. Mostrar 5 curvas para Kcp = 10, 25, 50, 100, 200.
+%  Anotar el error estacionario de cada curva. El alumno observará la
+%  disminución del tiempo de establecimiento y del error a medida que
+%  aumenta la ganancia, sin que el sistema se vuelva inestable (1er orden).
+%  Generado por: matlab/cap01_introduccion.m, sección 4.]
+\figplaceholder{Efecto de la ganancia proporcional $K_c^p$ sobre la respuesta al
+escalón del motor DC. Cinco curvas: $K_c^p \in \{10, 25, 50, 100, 200\}$.
+Notar la reducción del error estacionario y el aumento de la velocidad de respuesta.}
+
+% [INSERTAR FIGURA: Diagrama conceptual comparando 4 ejemplos de sistemas
+%  de control en ingeniería eléctrica: (1) control de velocidad de motor,
+%  (2) AVR de generador, (3) MPPT en solar, (4) control de corriente en inversor.
+%  Para cada uno: mostrar planta, actuador, sensor y variable controlada.
+%  Ilustración esquemática, no necesariamente diagrama de bloques formal.]
+\figplaceholder{Cuatro ejemplos de sistemas de control en ingeniería eléctrica:
+motor DC, generador con AVR, panel solar con MPPT, inversor con control de corriente.
+Resaltar planta, sensor, actuador y variable controlada en cada caso.}
+
+%======================================================================
+\section{Resumen del capítulo}
+\label{sec:intro-resumen}
+%======================================================================
+
+En este capítulo se establecieron los cimientos del control automático.
+Los conceptos presentados son fundamentales para todo el resto del curso:
+
+\begin{itemize}
+  \item El \textbf{control automático} permite mantener una variable de un
+    proceso en un valor deseado sin intervención humana continua, incluso
+    frente a perturbaciones.
+  \item El concepto central es la \textbf{realimentación negativa}: medir
+    la salida, compararla con la referencia y actuar en función del error.
+  \item Un sistema de \textbf{lazo cerrado} es superior al de lazo abierto
+    en precisión y rechazo de perturbaciones, al costo de mayor complejidad
+    y el riesgo de inestabilidad.
+  \item Los componentes de un sistema de control son: \textbf{planta},
+    \textbf{actuador}, \textbf{sensor}, \textbf{controlador} y \textbf{comparador}.
+  \item Las \textbf{especificaciones de desempeño} se dividen en estabilidad,
+    especificaciones transitorias ($t_r$, $t_p$, $M_p$, $t_s$) y error
+    en régimen permanente ($e_{ss}$).
+  \item La función de transferencia de lazo cerrado es
+    $T(s) = G(s)/\bigl[1 + G(s)H(s)\bigr]$, y el denominador $1 + G(s)H(s)$
+    determina la estabilidad del sistema.
+  \item El \textbf{control proporcional} mejora la respuesta pero no elimina
+    el error estacionario; para ello se necesita acción integral (PI o PID).
+  \item \textbf{MATLAB} con el Control System Toolbox es la herramienta
+    estándar para análisis y diseño de sistemas de control.
+\end{itemize}
+
+%======================================================================
+\section{Conceptos clave}
+\label{sec:intro-conceptos}
+%======================================================================
+
+\begin{conceptosclave}
+\begin{description}[leftmargin=5.5em, labelwidth=5em, font=\bfseries\color{colkey}]
+  \item[Planta]        Objeto físico cuya variable de salida se desea controlar.
+  \item[Actuador]      Dispositivo que ejecuta la acción de control sobre la planta.
+  \item[Sensor]        Transductor que mide la variable de salida y la convierte en señal eléctrica.
+  \item[Error] $e(t) = r(t) - b(t)$. Diferencia entre la referencia y la medición de la salida.
+  \item[Realim.] Uso de la señal de salida medida para generar la acción de control.
+  \item[Lazo abierto]  Sistema donde la acción de control no depende de la salida.
+  \item[Lazo cerrado]  Sistema donde la acción de control se genera a partir del error.
+  \item[FT lazo cerr.] $T(s) = G(s)/[1+G(s)H(s)]$ con $G(s) = G_c(s)G_p(s)$.
+  \item[$e_{ss}$]      Error en régimen permanente: $\lim_{t\to\infty}e(t)$.
+  \item[Estabilidad]   Todos los polos de $T(s)$ con parte real negativa.
+  \item[BIBO]          \textit{Bounded Input Bounded Output}: entrada acotada $\Rightarrow$ salida acotada.
+  \item[$M_p$]         Sobreoscilación porcentual de la respuesta al escalón.
+  \item[$t_s$]         Tiempo de establecimiento: cuando la respuesta queda dentro del $\pm 2\%$.
+  \item[PID]           Controlador Proporcional-Integral-Derivativo. El más usado en industria.
+\end{description}
+\end{conceptosclave}
+
+%======================================================================
+\section{Errores comunes}
+\label{sec:intro-errores}
+%======================================================================
+
+\begin{errorcomon}[Confundir ``lazo abierto'' con ``sin control'']
+  Un sistema de lazo abierto \textbf{sí tiene controlador}; lo que no tiene
+  es medición de la salida. Un microondas con temporizador es de lazo abierto:
+  tiene un ``controlador'' (el temporizador) pero no mide la temperatura.
+  ``Lazo abierto'' no significa ``sin control'', sino ``sin realimentación''.
+\end{errorcomon}
+
+\begin{errorcomon}[Creer que mayor ganancia siempre es mejor]
+  Aumentar la ganancia del controlador proporcional reduce el error estacionario
+  y acelera la respuesta, pero \textbf{no se puede aumentar indefinidamente}.
+  En sistemas de orden 2 o superior, una ganancia excesiva provoca
+  sobreoscilaciones crecientes y eventualmente inestabilidad. Siempre hay
+  un compromiso entre precisión, velocidad y estabilidad.
+\end{errorcomon}
+
+\begin{errorcomon}[Omitir el signo negativo en la realimentación]
+  En la suma del lazo cerrado, la señal realimentada se \textbf{resta}
+  (signo negativo). Si se suma (signo positivo), la realimentación es
+  \textit{positiva}, lo que generalmente inestabiliza el sistema. Este es
+  un error frecuente al trazar diagramas de bloques en los exámenes.
+\end{errorcomon}
+
+\begin{errorcomon}[Confundir función de transferencia de lazo abierto y cerrado]
+  La función de transferencia de lazo abierto es $G(s)H(s)$ (se abre el lazo
+  y se mide la respuesta de ida y vuelta). La de lazo cerrado es
+  $G(s)/[1+G(s)H(s)]$. Son distintas y se usan para propósitos diferentes:
+  la de lazo abierto para análisis de estabilidad (criterio de Bode, Nyquist);
+  la de lazo cerrado para calcular la respuesta a la referencia.
+\end{errorcomon}
+
+\begin{errorcomon}[Ignorar las perturbaciones al especificar el sistema]
+  El error estacionario calculado a partir de la función de transferencia
+  de referencia a salida solo considera la respuesta a $r(t)$. En un sistema
+  real, las perturbaciones $d(t)$ también contribuyen al error.
+  Un sistema de lazo cerrado reduce (pero no elimina con control P) el error
+  causado por perturbaciones. Para análisis completo, se debe calcular
+  también la función de transferencia de perturbación a salida.
+\end{errorcomon}

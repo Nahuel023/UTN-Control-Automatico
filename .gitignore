@@ -1,19 +1,119 @@
-# LaTeX auxiliary files
+# .gitignore — Proyecto LaTeX "Control Automático" UTN IEE
+
+#----------------------------------------------------------------------
+# Archivos auxiliares generados por LaTeX
+#----------------------------------------------------------------------
 *.aux
 *.log
-*.fls
-*.fdb_latexmk
-*.synctex.gz
 *.out
 *.toc
 *.lof
 *.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.synctex(busy)
 *.bbl
+*.bcf
 *.blg
+*.run.xml
 *.idx
 *.ind
 *.ilg
+*.ist
+*.glo
+*.gls
+*.glg
+*.acn
+*.acr
+*.alg
+*.nav
+*.snm
+*.vrb
+*.xdy
+*.mw
 
-# PDFs compiled from .tex (keep manually added reference PDFs out of git)
-# Uncomment the next line if you want to track compiled PDFs
-# *.pdf
+# Directorio de caché de minted (generado con -shell-escape)
+_minted-*/
+_minted-main/
+
+# Archivos de índice
+*.nlo
+*.nls
+
+#----------------------------------------------------------------------
+# PDFs compilados (no versionar los PDFs generados localmente)
+# Descomentá la siguiente línea si querés versionar el PDF final:
+# !main.pdf
+#----------------------------------------------------------------------
+*.pdf
+
+#----------------------------------------------------------------------
+# Archivos de referencia (libros de texto — no versionar por copyright)
+#----------------------------------------------------------------------
+Ingeniería de Control - Bolton.pdf
+ingenieria-de-control-moderna-ogata-5ed.pdf
+*.jpg
+*.jpeg
+
+#----------------------------------------------------------------------
+# Editores y entornos de desarrollo
+#----------------------------------------------------------------------
+# VS Code
+.vscode/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim / Neovim
+*.swp
+*.swo
+*~
+
+# Emacs
+\#*\#
+.\#*
+
+# TeXstudio
+*.bak
+*.backup
+
+#----------------------------------------------------------------------
+# Sistema operativo
+#----------------------------------------------------------------------
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Linux
+*~
+
+#----------------------------------------------------------------------
+# Python (para minted/Pygments)
+#----------------------------------------------------------------------
+__pycache__/
+*.pyc
+*.pyo
+
+#----------------------------------------------------------------------
+# MATLAB
+#----------------------------------------------------------------------
+# No ignorar los scripts .m (son parte del proyecto)
+# Ignorar archivos temporales de MATLAB:
+*.asv
+*.m~
+slprj/
+*.slxc
+
+#----------------------------------------------------------------------
+# Archivos de Claude Code (configuración local)
+#----------------------------------------------------------------------
+.claude/settings.local.json

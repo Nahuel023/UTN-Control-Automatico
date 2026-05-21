@@ -1,0 +1,159 @@
+%% styles/commands.sty
+%% Comandos personalizados para Control Automático — UTN IEE
+\ProvidesPackage{commands}[2024/01/01 Comandos UTN Control Automatico]
+
+%----------------------------------------------------------------------
+% OPERADORES MATEMÁTICOS
+%----------------------------------------------------------------------
+\DeclareMathOperator{\sen}{sen}        % seno en español
+\DeclareMathOperator{\tg}{tg}          % tangente
+\DeclareMathOperator{\arctg}{arctg}
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator{\rank}{rango}
+\DeclareMathOperator{\tr}{tr}          % traza de matriz
+
+% Redefinir \Re y \Im para que tengan texto romano (no Fraktur)
+\renewcommand{\Re}{\operatorname{Re}}
+\renewcommand{\Im}{\operatorname{Im}}
+
+%----------------------------------------------------------------------
+% TRANSFORMADA DE LAPLACE Y FOURIER
+%----------------------------------------------------------------------
+%% \Laplace{f(t)}  →  F(s)   (notación con llaves grandes)
+\newcommand{\Laplace}[1]{\mathcal{L}\!\left\{#1\right\}}
+\newcommand{\LaplaceInv}[1]{\mathcal{L}^{-1}\!\left\{#1\right\}}
+\newcommand{\Fourier}[1]{\mathcal{F}\!\left\{#1\right\}}
+
+%% Símbolo de la transformada sobre una ecuación
+\newcommand{\laplacesym}{\overset{\mathcal{L}}{\longleftrightarrow}}
+
+%----------------------------------------------------------------------
+% NOTACIÓN DE FUNCIONES DE TRANSFERENCIA
+%----------------------------------------------------------------------
+%% \FT{G}{s}  →  G(s)
+\newcommand{\FT}[2]{#1(#2)}
+
+%% Función de transferencia de lazo cerrado estándar
+%%   \FTLC{G}{H}  →  G/(1+GH)
+\newcommand{\FTLC}[2]{\dfrac{#1}{1 + #1 #2}}
+
+%% Error en régimen permanente: \ess
+\newcommand{\ess}{e_{ss}}
+
+%% Ganancia de lazo: \GL
+\newcommand{\GL}{L(s)}
+
+%----------------------------------------------------------------------
+% SEÑALES TÍPICAS
+%----------------------------------------------------------------------
+\newcommand{\escalon}[1][t]{u(#1)}          % escalón unitario
+\newcommand{\rampa}[1][t]{r(#1)}             % rampa unitaria
+\newcommand{\impulso}[1][t]{\delta(#1)}      % impulso de Dirac
+\newcommand{\parabola}[1][t]{\tfrac{1}{2}#1^2\,u(#1)}
+
+%----------------------------------------------------------------------
+% NOTACIÓN DE VARIABLES DE ESTADO
+%----------------------------------------------------------------------
+\newcommand{\vx}{\mathbf{x}}              % vector de estado
+\newcommand{\vu}{\mathbf{u}}              % vector de entrada
+\newcommand{\vy}{\mathbf{y}}              % vector de salida
+\newcommand{\mA}{\mathbf{A}}              % matriz de estado
+\newcommand{\mB}{\mathbf{B}}              % matriz de entrada
+\newcommand{\mC}{\mathbf{C}}              % matriz de salida
+\newcommand{\mD}{\mathbf{D}}              % matriz de transmisión directa
+\newcommand{\mI}{\mathbf{I}}              % identidad
+\newcommand{\mPhi}{\boldsymbol{\Phi}}     % matriz de transición de estado
+
+\newcommand{\xdot}{\dot{\mathbf{x}}}      % derivada del vector de estado
+
+%----------------------------------------------------------------------
+% POLOS, CEROS Y ESTABILIDAD
+%----------------------------------------------------------------------
+\newcommand{\polo}[1]{p_{#1}}
+\newcommand{\cero}[1]{z_{#1}}
+\newcommand{\wn}{\omega_n}               % frecuencia natural
+\newcommand{\wc}{\omega_c}               % frecuencia de cruce de ganancia
+\newcommand{\wp}{\omega_p}               % frecuencia de cruce de fase
+\newcommand{\zeta}{\zeta}                % ya definido, solo como alias
+\newcommand{\MG}{MG}                     % margen de ganancia
+\newcommand{\MF}{MF}                     % margen de fase
+
+%----------------------------------------------------------------------
+% UNIDADES FRECUENTES (atajos para siunitx)
+%----------------------------------------------------------------------
+\newcommand{\rad}{\si{\radian}}
+\newcommand{\rads}{\si{\radian\per\second}}
+\newcommand{\Hz}{\si{\hertz}}
+\newcommand{\dB}{\si{\decibel}}
+\newcommand{\grados}{^{\circ}}
+
+%----------------------------------------------------------------------
+% FORMATO DE NÚMEROS COMPLEJOS
+%----------------------------------------------------------------------
+%% \complejo{a}{b}   →   a + jb
+\newcommand{\complejo}[2]{#1 + j\,#2}
+%% \complejoR{a}{b}   →   a - jb
+\newcommand{\complejoR}[2]{#1 - j\,#2}
+
+%----------------------------------------------------------------------
+% ENTORNOS MATEMÁTICOS UTILITARIOS
+%----------------------------------------------------------------------
+%% Ecuación con descripción al margen
+%% Uso: \eqndesc{ecuación}{descripción}
+\newcommand{\eqndesc}[2]{%
+  \begin{equation} #1 \end{equation}%
+  \noindent\textcolor{utngray}{\footnotesize\textit{donde: #2}}%
+}
+
+%% Paso de desarrollo (→) con texto
+\newcommand{\paso}[1]{\quad\Rightarrow\quad \text{#1}\quad}
+
+%% Cuadro de resultado en modo matemático
+\newcommand{\boxresult}[1]{%
+  \begin{empheq}[box=\fbox]{equation*}
+    #1
+  \end{empheq}%
+}
+
+%----------------------------------------------------------------------
+% BLOQUES DE TEXTO ESPECIALES
+%----------------------------------------------------------------------
+%% Párrafo de "Por qué es importante"
+\newcommand{\porqueimp}[1]{%
+  \par\smallskip
+  \noindent\textcolor{colthm}{\textbf{¿Por qué es importante?}}\enspace #1
+  \par\smallskip
+}
+
+%% Interpretación física
+\newcommand{\interfisica}[1]{%
+  \par\smallskip
+  \noindent\textcolor{colobs}{\textbf{Interpretación física:}}\enspace #1
+  \par\smallskip
+}
+
+%% Placeholder de figura
+%% Uso: \figplaceholder{Descripción del gráfico. Qué muestra. Por qué importa.}
+\newcommand{\figplaceholder}[1]{%
+  \begin{center}
+  \fbox{\begin{minipage}{0.85\textwidth}
+    \centering\vspace{0.8cm}
+    \textcolor{utngray}{\textit{[INSERTAR FIGURA: #1]}}
+    \vspace{0.8cm}
+  \end{minipage}}
+  \end{center}
+}
+
+%----------------------------------------------------------------------
+% ABREVIACIONES TIPOGRÁFICAS
+%----------------------------------------------------------------------
+\newcommand{\ie}{i.\,e.,\xspace}
+\newcommand{\eg}{e.\,g.,\xspace}
+\newcommand{\cf}{cf.\xspace}
+\usepackage{xspace}
+
+%----------------------------------------------------------------------
+% REFERENCIA A CAPÍTULOS/SECCIONES FUTURAS
+%----------------------------------------------------------------------
+\newcommand{\verCap}[1]{\textcolor{utnblue}{\textit{(ver Capítulo~#1)}}}
+\newcommand{\verSec}[1]{\textcolor{utnblue}{\textit{(ver Sección~\ref{#1})}}}
