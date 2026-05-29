@@ -1,6 +1,11 @@
 % bibliography/references.bib
 % Bibliografía del apunte "Control Automático" — UTN IEE
+% Autor: Ing. Nahuel Medina
 % Codificación: UTF-8
+
+%======================================================================
+%% REFERENCIAS PRINCIPALES (citar frecuentemente)
+%======================================================================
 
 @book{ogata2010,
   author    = {Ogata, Katsuhiko},
@@ -10,8 +15,9 @@
   address   = {Madrid},
   year      = {2010},
   language  = {spanish},
-  note      = {Traducción de la 5.ª edición en inglés.
-               Referencia principal del curso.}
+  note      = {Referencia principal del curso. Cobertura completa
+               de función de transferencia, respuesta temporal,
+               estabilidad, Bode, lugar de raíces y variables de estado.}
 }
 
 @book{bolton2006,
@@ -22,9 +28,13 @@
   address   = {México D.F.},
   year      = {2006},
   language  = {spanish},
-  note      = {Texto de referencia complementario. Enfoque
-               práctico con ejemplos industriales.}
+  note      = {Texto complementario con enfoque práctico e industrial.
+               Útil para ejemplos de sistemas físicos reales.}
 }
+
+%======================================================================
+%% REFERENCIAS GENERALES DE CONTROL CLÁSICO
+%======================================================================
 
 @book{nise2019,
   author    = {Nise, Norman S.},
@@ -34,8 +44,8 @@
   address   = {Hoboken, NJ},
   year      = {2019},
   language  = {english},
-  note      = {Referencia en inglés con cobertura completa de
-               métodos de diseño clásico y moderno.}
+  note      = {Excelente tratamiento del lugar geométrico de raíces
+               y diseño de compensadores. Muchos ejemplos resueltos.}
 }
 
 @book{franklin2015,
@@ -47,18 +57,7 @@
   year      = {2015},
   language  = {english},
   note      = {Tratamiento riguroso del dominio frecuencial y
-               diseño por lugar de raíces.}
-}
-
-@book{astrom2008,
-  author    = {{\AA}str{\"o}m, Karl J. and Wittenmark, Bj{\"o}rn},
-  title     = {Adaptive Control},
-  edition   = {2},
-  publisher = {Dover Publications},
-  address   = {Mineola, NY},
-  year      = {2008},
-  language  = {english},
-  note      = {Fundamentos de control adaptivo y sistemas no lineales.}
+               diseño por lugar de raíces. Muy completo en PID.}
 }
 
 @book{dorf2016,
@@ -73,10 +72,145 @@
                computacional y MATLAB/Simulink.}
 }
 
+@book{kuo2010,
+  author    = {Kuo, Benjamin C. and Golnaraghi, Farid},
+  title     = {Automatic Control Systems},
+  edition   = {9},
+  publisher = {Wiley},
+  address   = {Hoboken, NJ},
+  year      = {2010},
+  language  = {english},
+  note      = {Clásico de la disciplina. Muy completo en análisis
+               de sistemas en tiempo discreto y diseño digital.}
+}
+
+@book{dazzo2003,
+  author    = {D'Azzo, John J. and Houpis, Constantine H. and Sheldon, Stuart N.},
+  title     = {Linear Control System Analysis and Design with {MATLAB}},
+  edition   = {5},
+  publisher = {Marcel Dekker},
+  address   = {New York},
+  year      = {2003},
+  language  = {english},
+  note      = {Excelente integración con MATLAB para análisis y diseño.
+               Fuerte cobertura de dominio frecuencial.}
+}
+
+%======================================================================
+%% CONTROL MODERNO Y VARIABLES DE ESTADO
+%======================================================================
+
+@book{astrom2008,
+  author    = {{\AA}str{\"o}m, Karl J. and Wittenmark, Bj{\"o}rn},
+  title     = {Adaptive Control},
+  edition   = {2},
+  publisher = {Dover Publications},
+  address   = {Mineola, NY},
+  year      = {2008},
+  language  = {english},
+  note      = {Control adaptivo y no lineal. Referencia para
+               capítulos avanzados de control moderno.}
+}
+
+@book{ogata1995discrete,
+  author    = {Ogata, Katsuhiko},
+  title     = {Discrete-Time Control Systems},
+  edition   = {2},
+  publisher = {Prentice Hall},
+  address   = {Englewood Cliffs, NJ},
+  year      = {1995},
+  language  = {english},
+  note      = {Complemento de Ogata para control digital.
+               Variables de estado en tiempo discreto.}
+}
+
+@book{shinners1998,
+  author    = {Shinners, Stanley M.},
+  title     = {Modern Control System Theory and Design},
+  edition   = {2},
+  publisher = {Wiley},
+  address   = {New York},
+  year      = {1998},
+  language  = {english},
+  note      = {Buen desarrollo de variables de estado, controlabilidad
+               y observabilidad con ejemplos prácticos.}
+}
+
+%======================================================================
+%% SEÑALES Y SISTEMAS (fundamento matemático)
+%======================================================================
+
+@book{oppenheim2014,
+  author    = {Oppenheim, Alan V. and Willsky, Alan S.},
+  title     = {Signals and Systems},
+  edition   = {2},
+  publisher = {Pearson},
+  address   = {Upper Saddle River, NJ},
+  year      = {2014},
+  language  = {english},
+  note      = {Fundamento matemático: transformada de Laplace,
+               convolución, función de transferencia. Referencia para
+               el capítulo de modelado matemático.}
+}
+
+%======================================================================
+%% APLICACIONES EN INGENIERÍA ELÉCTRICA
+%======================================================================
+
+@book{mohan2003,
+  author    = {Mohan, Ned and Undeland, Tore M. and Robbins, William P.},
+  title     = {Power Electronics: Converters, Applications, and Design},
+  edition   = {3},
+  publisher = {Wiley},
+  address   = {Hoboken, NJ},
+  year      = {2003},
+  language  = {english},
+  note      = {Referencia para el capítulo de aplicaciones.
+               Control de convertidores de potencia.}
+}
+
+@book{kundur1994,
+  author    = {Kundur, Prabha},
+  title     = {Power System Stability and Control},
+  publisher = {McGraw-Hill},
+  address   = {New York},
+  year      = {1994},
+  language  = {english},
+  note      = {Referencia para control en sistemas eléctricos de potencia:
+               AVR, gobernadores, PSS. Capítulo de aplicaciones reales.}
+}
+
+@book{bose2001,
+  author    = {Bose, Bimal K.},
+  title     = {Modern Power Electronics and {AC} Drives},
+  publisher = {Prentice Hall},
+  address   = {Upper Saddle River, NJ},
+  year      = {2001},
+  language  = {english},
+  note      = {Control vectorial de motores. Accionamientos eléctricos.
+               Referencia para capítulo de aplicaciones.}
+}
+
+%======================================================================
+%% HERRAMIENTAS COMPUTACIONALES
+%======================================================================
+
 @manual{matlab2023,
   title        = {{MATLAB} Control System Toolbox User's Guide},
   organization = {The MathWorks, Inc.},
   address      = {Natick, MA},
   year         = {2023},
-  url          = {https://www.mathworks.com/help/control/}
+  url          = {https://www.mathworks.com/help/control/},
+  note         = {Documentación oficial del Control System Toolbox.
+                  Referencia para todas las secciones de MATLAB.}
+}
+
+@manual{simulink2023,
+  title        = {Simulink User's Guide},
+  organization = {The MathWorks, Inc.},
+  address      = {Natick, MA},
+  year         = {2023},
+  url          = {https://www.mathworks.com/help/simulink/},
+  note         = {Documentación oficial de Simulink. Referencia
+                  para el capítulo 16.}
 }

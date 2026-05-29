@@ -1,0 +1,31 @@
+%% appendix/_template_appendix.tex
+%% Plantilla para apéndices — Control Automático UTN IEE
+%%
+%% INSTRUCCIONES:
+%%   1. Copiar a appendix/apXX_nombre.tex
+%%   2. En main.tex, agregar DENTRO del bloque \appendix:
+%%      \include{appendix/apXX_nombre}
+%%   3. Los apéndices usan numeración A, B, C... automáticamente.
+
+\chapter{[Título del Apéndice]}
+\label{ap:[etiqueta]}
+
+[Breve descripción de qué contiene este apéndice y a qué capítulos está asociado.]
+
+%======================================================================
+\section{[Sección del apéndice]}
+\label{sec:ap[etiqueta]-1}
+%======================================================================
+
+[Contenido: demostraciones largas, tablas de referencia, derivaciones
+alternativas, material complementario que sería demasiado extenso en el
+cuerpo del capítulo.]
+
+%% Usos típicos de apéndices en este apunte:
+%%
+%% Ap. A: Tabla de transformadas de Laplace (cap. 2)
+%% Ap. B: Derivación completa de ecuaciones de estado de máquinas eléctricas (cap. 14)
+%% Ap. C: Tablas de respuesta en frecuencia de sistemas estándar (cap. 9-10)
+%% Ap. D: Código MATLAB completo con comentarios extendidos
+%% Ap. E: Demostraciones de criterios de estabilidad (Routh, Nyquist)
+%% Ap. F: Parámetros de motores y generadores usados en los ejemplos
